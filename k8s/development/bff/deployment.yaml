@@ -1,43 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rms-api-monolito
+  name: rms-api-pagamentos
   namespace: rms
   labels:
-    app: rms-api-monolito
+    app: rms-api-pagamentos
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: rms-api-monolito
+      app: rms-api-pagamentos
   template:
     metadata:
       labels:
-        app: rms-api-monolito
+        app: rms-api-pagamentos
     spec:
       automountServiceAccountToken: false
       containers:
-        - name: rms-api-monolito
-          image: rms-api-monolito:latest # No Kubernetes do Docker Desktop a imagem deve já estar presente no cache de imagens do Docker na máquina local
+        - name: rms-api-pagamentos
+          image: rms-api-pagamentos:latest # No Kubernetes do Docker Desktop a imagem deve já estar presente no cache de imagens do Docker na máquina local
           imagePullPolicy: IfNotPresent # Necessário definir "IfNotPresent" ao utilizar o Kubernetes do Docker Desktop para evitar erros "ImagePullBackOff" ao criar os Pods
           envFrom:
             - configMapRef:
-                name: rms-api-monolito-config
+                name: rms-api-pagamentos-config
           env:
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: rms-api-monolito-secret
+                  name: rms-api-pagamentos-secret
                   key: DB_USERNAME
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: rms-api-monolito-secret
+                  name: rms-api-pagamentos-secret
                   key: DB_PASSWORD
             - name: ACCESS_TOKEN_MERCADOPAGO
               valueFrom:
                 secretKeyRef:
-                  name: rms-api-monolito-secret
+                  name: rms-api-pagamentos-secret
                   key: ACCESS_TOKEN_MERCADOPAGO
           ports:
             - containerPort: 3000

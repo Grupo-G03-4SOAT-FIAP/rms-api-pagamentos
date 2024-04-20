@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rms-api-monolito-config
+  name: rms-api-pagamentos-config
   namespace: rms
   labels:
-    app: rms-api-monolito
+    app: rms-api-pagamentos
 data:
   DB_NAME: "rms"
   DB_SSL: "false"
