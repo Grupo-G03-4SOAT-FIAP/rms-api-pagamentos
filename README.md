@@ -1,17 +1,15 @@
 <img src="https://github.com/Grupo-G03-4SOAT-FIAP/rms-backend/raw/main/docs/img/bope-faca-na-carveira-knife-skull-logo.png" alt="BOPE" title="BOPE" align="right" height="60" />
 
 # Restaurant Management System
+## API de Pagamentos
 
 [![Deploy to Amazon EKS](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-monolito/actions/workflows/deploy.yml/badge.svg)](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-monolito/actions/workflows/deploy.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Grupo-G03-4SOAT-FIAP_rms-api-monolito&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Grupo-G03-4SOAT-FIAP_rms-api-monolito)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Grupo-G03-4SOAT-FIAP_rms-api-monolito&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Grupo-G03-4SOAT-FIAP_rms-api-monolito)
 
-Sistema de Gestão de Restaurantes (RMS) desenvolvido pelo grupo *"BOPE"* G03 da turma 4SOAT para o Tech Challenge da [Pós Tech em Software Architecture da FIAP](https://postech.fiap.com.br/curso/software-architecture/).
+Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvolvido pelo grupo *"BOPE"* G03 da turma 4SOAT para o Tech Challenge da [Pós Tech em Software Architecture da FIAP](https://postech.fiap.com.br/curso/software-architecture/).
 
-> [!WARNING]  
-> Essa aplicação monolítica foi decomposta em microsserviços e não será mais mantida, nem receberá novas funcionalidades. Visite a [página da organização](https://github.com/Grupo-G03-4SOAT-FIAP) no GitHub para visualizar todos os microsserviços.
-
-## O PROBLEMA
+### O PROBLEMA
 
 *Há uma lanchonete de bairro que está expandindo devido seu grande sucesso. Porém, com a expansão e sem um sistema de controle de pedidos, o atendimento aos clientes pode ser caótico e confuso. Por exemplo, imagine que um cliente faça um pedido complexo, como um hambúrguer personalizado com ingredientes específicos, acompanhado de batatas fritas e uma bebida. O atendente pode anotar o pedido em um papel e entregá-lo à cozinha, mas não há garantia de que o pedido será preparado corretamente.*
 
@@ -196,8 +194,8 @@ $ npm run test:cov
 
 ## Projetos relacionados
 
-Amazon Cognito Lambda triggers\
-https://github.com/Grupo-G03-4SOAT-FIAP/rms-cognito-triggers
+API de Pedidos\
+https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pedidos
 
 Infrastructure as code (IaC) com Terraform\
 https://github.com/Grupo-G03-4SOAT-FIAP/rms-iac
