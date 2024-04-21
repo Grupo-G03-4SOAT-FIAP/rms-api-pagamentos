@@ -1,22 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { HTTPResponse } from 'src/application/common/HTTPResponse';
 import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
-import { IPedidoUseCase } from 'src/domain/pedido/interfaces/pedido.use_case.port';
+import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import {
   MensagemMercadoPagoDTO,
   PedidoGatewayPagamentoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
-import {
-  CriaPedidoDTO,
-  PedidoDTO,
-} from 'src/presentation/rest/v1/presenters/pedido/pedido.dto';
 
 @Injectable()
-export class PedidoUseCase implements IPedidoUseCase {
+export class WebhookUseCase implements IWebhookUseCase {
   constructor(
     @Inject(IPedidoRepository)
     private readonly pedidoRepository: IPedidoRepository,
@@ -30,23 +25,6 @@ export class PedidoUseCase implements IPedidoUseCase {
     private readonly pedidoDTOFactory: IPedidoDTOFactory,
   ) {}
 
-  async criarPedido(
-    criaPedidoDTO: CriaPedidoDTO,
-  ): Promise<HTTPResponse<PedidoDTO>> {
-    const pedido = await this.pedidoFactory.criarEntidadePedido(criaPedidoDTO);
-    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedido);
-    const qrData = await this.gatewayPagamentoService.criarPedido(pedido);
-    pedidoDTO.qrCode = qrData;
-
-    // TODO: Gravar no MongoDB o pedido.id e o respectivo QR Code gerado pelo Mercado Pago
-    // await this.pedidoRepository.registrarQRCode(pedido.id, qrData, new Date());
-
-    return {
-      mensagem: 'Pedido criado com sucesso',
-      body: pedidoDTO,
-    };
-  }
-
   async consumirMensagem(
     id: string,
     topic: string,
@@ -54,7 +32,11 @@ export class PedidoUseCase implements IPedidoUseCase {
     mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
     // TODO: Gravar no MongoDB os parâmentros id, topic e mensagem que recebemos do Mercado Pago, para auditoria
-    // await this.pedidoRepository.guardarMsgWebhook(id, topic, mensagem);
+    // await this.pedidoRepository.guardarMsgWebhook({
+    //   id: id,
+    //   topic: topic,
+    //   mensagem: mensagem,
+    // });
 
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =

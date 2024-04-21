@@ -21,7 +21,6 @@ export class ProdutoDTOFactory implements IProdutoDTOFactory {
     produtoDTO.nome = produto.nome;
     produtoDTO.descricao = produto.descricao;
     produtoDTO.valorUnitario = produto.valorUnitario;
-    produtoDTO.imagemUrl = produto.imagemUrl;
     produtoDTO.categoria = categoriaDTO;
 
     return produtoDTO;
@@ -38,7 +37,6 @@ export class ProdutoDTOFactory implements IProdutoDTOFactory {
       produtoDTO.nome = produto.nome;
       produtoDTO.descricao = produto.descricao;
       produtoDTO.valorUnitario = produto.valorUnitario;
-      produtoDTO.imagemUrl = produto.imagemUrl;
       produtoDTO.categoria = categoriaDTO;
       return produtoDTO;
     });

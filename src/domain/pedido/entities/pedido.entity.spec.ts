@@ -1,17 +1,13 @@
 import { PedidoEntity } from './pedido.entity';
 import { ItemPedidoEntity } from './item_pedido.entity';
 import { StatusPedido } from '../enums/pedido.enum';
-import { ClienteEntity } from 'src/domain/cliente/entities/cliente.entity';
 import { itemPedidoEntityMock } from 'src/mocks/item_pedido.mock';
-import { clienteEntityMock } from 'src/mocks/cliente.mock';
 
 describe('PedidoEntity', () => {
   let itensPedido: ItemPedidoEntity[];
   let statusPedido: StatusPedido;
   let numeroPedido: string;
   let pago: boolean;
-  let cliente: ClienteEntity;
-  let clientePedido: ClienteEntity;
   let id: string;
 
   beforeEach(() => {
@@ -20,8 +16,6 @@ describe('PedidoEntity', () => {
     statusPedido = StatusPedido.RECEBIDO;
     numeroPedido = '05012024';
     pago = false;
-    cliente = clienteEntityMock;
-    clientePedido = clienteEntityMock;
     id = '0a14aa4e-75e7-405f-8301-81f60646c93d';
   });
 
@@ -31,8 +25,6 @@ describe('PedidoEntity', () => {
       statusPedido,
       numeroPedido,
       pago,
-      cliente,
-      clientePedido,
       id,
     );
 
@@ -40,7 +32,6 @@ describe('PedidoEntity', () => {
     expect(pedido.statusPedido).toEqual(statusPedido);
     expect(pedido.numeroPedido).toEqual(numeroPedido);
     expect(pedido.pago).toEqual(pago);
-    expect(pedido.cliente).toEqual(cliente);
     expect(pedido.id).toEqual(id);
   });
 
@@ -56,7 +47,6 @@ describe('PedidoEntity', () => {
     expect(pedido.statusPedido).toEqual(statusPedido);
     expect(pedido.numeroPedido).toEqual(numeroPedido);
     expect(pedido.pago).toEqual(pago);
-    expect(pedido.cliente).toBeUndefined();
     expect(pedido.id).toBeUndefined();
   });
 });

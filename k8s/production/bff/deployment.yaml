@@ -75,16 +75,6 @@ spec:
                 secretKeyRef:
                   name: mercadopago-secret
                   key: WEBHOOK_URL_MERCADOPAGO
-            - name: COGNITO_USER_POOL_ID
-              valueFrom:
-                secretKeyRef:
-                  name: cognito-secret
-                  key: COGNITO_USER_POOL_ID
-            - name: COGNITO_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: cognito-secret
-                  key: COGNITO_CLIENT_ID
           ports:
             - containerPort: 3000
           resources:

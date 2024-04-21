@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ItemPedidoDTOFactory } from './item_pedido.dto.factory';
-import { CriaItemPedidoDTO } from '../../../presentation/rest/v1/presenters/pedido/item_pedido.dto';
+import { ItemPedidoDTO } from '../../../presentation/rest/v1/presenters/pedido/item_pedido.dto';
 
 describe('ItemPedidoDTOFactory', () => {
   let itemPedidoDTOFactory: ItemPedidoDTOFactory;
@@ -19,6 +19,6 @@ describe('ItemPedidoDTOFactory', () => {
 
   it('Deve ser possível criar um itemPedidoDTO', async () => {
     const item = itemPedidoDTOFactory.criarItemPedidoDTO('produto', 20);
-    expect(item).toBeInstanceOf(CriaItemPedidoDTO);
+    expect(item).toBeInstanceOf(ItemPedidoDTO);
   });
 });

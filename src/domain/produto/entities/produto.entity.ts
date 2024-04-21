@@ -5,7 +5,6 @@ export class ProdutoEntity {
   private _nome: string;
   private _categoria: CategoriaEntity;
   private _valorUnitario: number;
-  private _imagemUrl: string;
   private _descricao?: string;
   private _id?: string;
 
@@ -13,7 +12,6 @@ export class ProdutoEntity {
     nome: string,
     categoria: CategoriaEntity,
     valorUnitario: number,
-    imagemUrl: string,
     descricao?: string,
     id?: string,
   ) {
@@ -22,7 +20,6 @@ export class ProdutoEntity {
     this.descricao = descricao;
     this.categoria = categoria;
     this.valorUnitario = valorUnitario;
-    this.imagemUrl = imagemUrl;
   }
 
   get nome(): string {
@@ -48,14 +45,6 @@ export class ProdutoEntity {
 
   set valorUnitario(valorUnitario: number) {
     this._valorUnitario = valorUnitario;
-  }
-
-  get imagemUrl(): string {
-    return this._imagemUrl;
-  }
-
-  set imagemUrl(imagemUrl: string) {
-    this._imagemUrl = imagemUrl;
   }
 
   get descricao(): string | undefined {

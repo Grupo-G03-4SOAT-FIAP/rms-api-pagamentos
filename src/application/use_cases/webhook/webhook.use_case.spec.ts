@@ -1,17 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PedidoUseCase } from './pedido.use_case';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import {
   apiPedidosServiceMock,
-  criaPedidoDTOMock,
   gatewayPagamentoServiceMock,
   mensagemGatewayPagamentoDTO,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
-  pedidoEntityMock,
   pedidoFactoryMock,
   pedidoGatewayPagamentoDTO,
   pedidoModelMock,
@@ -19,15 +16,16 @@ import {
 } from 'src/mocks/pedido.mock';
 import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { ConfigService } from '@nestjs/config';
+import { WebhookUseCase } from './webhook.use_case';
 
-describe('PedidoUseCase', () => {
-  let pedidoUseCase: PedidoUseCase;
+describe('WebhookUseCase', () => {
+  let webhookUseCase: WebhookUseCase;
   let pedidoId: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PedidoUseCase,
+        WebhookUseCase,
         ConfigService,
         {
           provide: IPedidoRepository,
@@ -52,32 +50,12 @@ describe('PedidoUseCase', () => {
       ],
     }).compile();
 
-    pedidoUseCase = module.get<PedidoUseCase>(PedidoUseCase);
+    webhookUseCase = module.get<WebhookUseCase>(WebhookUseCase);
     pedidoId = '0a14aa4e-75e7-405f-8301-81f60646c93d';
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('deve criar um pedido com sucesso', async () => {
-    pedidoFactoryMock.criarEntidadePedido.mockReturnValue(pedidoEntityMock);
-    pedidoRepositoryMock.criarPedido.mockReturnValue(pedidoModelMock);
-    gatewayPagamentoServiceMock.criarPedido.mockReturnValue(null);
-    pedidoDTOFactoryMock.criarPedidoDTO.mockReturnValue(pedidoDTOMock);
-
-    const result = await pedidoUseCase.criarPedido(criaPedidoDTOMock);
-
-    expect(pedidoFactoryMock.criarEntidadePedido).toHaveBeenCalledWith(
-      criaPedidoDTOMock,
-    );
-    expect(pedidoDTOFactoryMock.criarPedidoDTO).toHaveBeenCalledWith(
-      pedidoEntityMock,
-    );
-    expect(result).toStrictEqual({
-      mensagem: 'Pedido criado com sucesso',
-      body: pedidoDTOMock,
-    });
   });
 
   it('deve atualizar o status de pagamento do pedido com sucesso', async () => {
@@ -91,7 +69,7 @@ describe('PedidoUseCase', () => {
       pedidoGatewayPagamentoDTO,
     );
 
-    const result = await pedidoUseCase.consumirMensagem(
+    const result = await webhookUseCase.consumirMensagem(
       idPedidoMercadoPago,
       topicMercadoPago,
       mensagemGatewayPagamentoDTO,

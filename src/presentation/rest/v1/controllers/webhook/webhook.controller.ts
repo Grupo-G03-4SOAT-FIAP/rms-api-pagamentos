@@ -5,28 +5,27 @@ import {
   Inject,
   NotFoundException,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { IPedidoUseCase } from 'src/domain/pedido/interfaces/pedido.use_case.port';
-import { CriaPedidoDTO, PedidoDTO } from '../../presenters/pedido/pedido.dto';
+import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import { BadRequestError } from '../../helpers/swagger/status-codes/bad_requests.swagger';
 import { NotFoundError } from '../../helpers/swagger/status-codes/not_found.swagger';
+import { MensagemMercadoPagoDTO } from '../../presenters/pedido/gatewaypag.dto';
 
-@Controller('pedido')
-@ApiTags('Pedido')
-export class PedidoController {
+@Controller('webhook')
+@ApiTags('Webhook')
+export class WebhookController {
   constructor(
-    @Inject(IPedidoUseCase)
-    private readonly pedidoUseCase: IPedidoUseCase,
+    @Inject(IWebhookUseCase)
+    private readonly webhookUseCase: IWebhookUseCase,
   ) {}
-
   @Post()
   @HttpCode(201)
-  @ApiOperation({ summary: 'Checkout de pedido' })
+  @ApiOperation({ summary: 'Consumir uma mensagem' })
   @ApiResponse({
     status: 201,
-    description: 'Pedido criado com sucesso',
-    type: PedidoDTO,
+    description: 'Mensagem consumida com sucesso',
   })
   @ApiResponse({
     status: 400,
@@ -38,9 +37,13 @@ export class PedidoController {
     description: 'Pedido informado não existe',
     type: NotFoundError,
   })
-  async criarPedido(@Body() criaPedidoDTO: CriaPedidoDTO) {
+  async consumirMensagem(
+    @Query('id') id: string,
+    @Query('topic') topic: string,
+    @Body() mensagem: MensagemMercadoPagoDTO,
+  ) {
     try {
-      return await this.pedidoUseCase.criarPedido(criaPedidoDTO);
+      return await this.webhookUseCase.consumirMensagem(id, topic, mensagem);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
