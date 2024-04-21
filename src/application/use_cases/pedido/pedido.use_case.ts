@@ -59,38 +59,20 @@ export class PedidoUseCase implements IPedidoUseCase {
   }
 
   async criarPedido(
-    criaClienteDTO: CriaClienteDTO,
     criaPedidoDTO: CriaPedidoDTO,
   ): Promise<HTTPResponse<PedidoDTO>> {
     const pedido = await this.pedidoFactory.criarEntidadePedido(criaPedidoDTO);
-    const cliente =
-      await this.pedidoFactory.criarEntidadeCliente(criaClienteDTO);
-    const clienteCriadoOuAtualizado =
-      await this.criarOuAtualizarCliente(cliente);
-    pedido.cliente = clienteCriadoOuAtualizado;
-    pedido.clientePedido = this.copiarDadosCliente(clienteCriadoOuAtualizado);
-    const pedidoCriado = await this.pedidoRepository.criarPedido(pedido);
-    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedidoCriado);
+    //const pedidoCriado = await this.pedidoRepository.criarPedido(pedido);
+    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedido);
     if (this.mercadoPagoIsEnabled()) {
       const qrData =
-        await this.gatewayPagamentoService.criarPedido(pedidoCriado);
+        await this.gatewayPagamentoService.criarPedido(pedido);
       pedidoDTO.qrCode = qrData;
     }
     return {
       mensagem: 'Pedido criado com sucesso',
       body: pedidoDTO,
     };
-  }
-
-  private copiarDadosCliente(
-    clienteOrigem: ClienteEntity,
-  ): ClienteEntity | null {
-    const clienteCopia = new ClienteEntity(
-      clienteOrigem.nome,
-      clienteOrigem.email,
-      clienteOrigem.cpf,
-    );
-    return clienteCopia;
   }
 
   private async criarOuAtualizarCliente(

@@ -17,7 +17,6 @@ import { ItemPedidoModel } from '../infrastructure/sql/models/item_pedido.model'
 import { ProdutoModule } from './produto.module';
 import { ClienteModule } from './client.module';
 import { PedidoService } from '../domain/pedido/services/pedido.service';
-import { AuthenticationGuard } from '@nestjs-cognito/auth';
 import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido.model';
 
 @Module({
@@ -59,7 +58,6 @@ import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido
     },
     SQLDTOFactory,
     PedidoService,
-    AuthenticationGuard,
   ],
   exports: [],
 })

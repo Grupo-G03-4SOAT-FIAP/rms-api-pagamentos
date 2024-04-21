@@ -5,6 +5,7 @@ import {
   clienteDTOMock,
 } from './cliente.mock';
 import {
+  criaItemPedidoDTOMock,
   itemPedidoDTOMock,
   itemPedidoEntityMock,
   itemPedidoEntityNotIdMock,
@@ -42,7 +43,6 @@ export const pedidoEntityMock = new PedidoEntity(
   '05012024',
   false,
   clienteEntityMock,
-  clienteEntityMock,
   '0a14aa4e-75e7-405f-8301-81f60646c93d',
   '2024-01-25T00:05:04.941Z',
   '2024-01-25T00:05:04.941Z',
@@ -54,7 +54,6 @@ export const pedidoEntityNotDateMock = new PedidoEntity(
   StatusPedido.RECEBIDO,
   '05012024',
   false,
-  clienteEntityMock,
   clienteEntityMock,
   '0a14aa4e-75e7-405f-8301-81f60646c93d',
 );
@@ -69,18 +68,20 @@ export const pedidoEntityNotIdMock = new PedidoEntity(
 
 // Mock para simular dados da entidade pedido sem cliente
 export const pedidoEntityNotClienteMock = new PedidoEntity(
-  [itemPedidoEntityMock],
+  [itemPedidoEntityNotIdMock],
   StatusPedido.RECEBIDO,
   '05012024',
   false,
+  undefined,
+  '0a14aa4e-75e7-405f-8301-81f60646c93d',
 );
 
 // Mock para simular o DTO com os dados recebidos pelo usuario ao criar um pedido
 export const criaPedidoDTOMock = new CriaPedidoDTO();
-criaPedidoDTOMock.itensPedido = [
-  { produto: '0a14aa4e-75e7-405f-8301-81f60646c93d', quantidade: 2 },
-];
-criaPedidoDTOMock.cpfCliente = '83904665030';
+criaPedidoDTOMock.id = pedidoModelMock.id;
+criaPedidoDTOMock.numeroPedido = pedidoModelMock.numeroPedido;
+criaPedidoDTOMock.itensPedido = [criaItemPedidoDTOMock];
+criaPedidoDTOMock.cliente = clienteDTOMock;
 
 // Mock para simular o DTO com os dados recebidos pelo usuario ao atualizar um pedido
 export const atualizaPedidoDTOMock = new AtualizaPedidoDTO();

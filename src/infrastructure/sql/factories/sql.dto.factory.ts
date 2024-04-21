@@ -80,7 +80,6 @@ export class SQLDTOFactory {
       pedido.numeroPedido,
       pedido.pago,
       clienteEntity,
-      clientePedidoEntity,
       pedido.id,
       pedido.criadoEm,
       pedido.atualizadoEm,

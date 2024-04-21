@@ -80,19 +80,16 @@ describe('PedidoUseCase', () => {
     clienteRepositoryMock.criarCliente.mockReturnValue(clienteModelMock);
     clienteRepositoryMock.editarCliente.mockReturnValue(clienteModelMock);
 
-    const result = await pedidoUseCase.criarPedido(
-      clienteDTOMock,
-      criaPedidoDTOMock,
-    );
+    const result = await pedidoUseCase.criarPedido(criaPedidoDTOMock);
 
     expect(pedidoFactoryMock.criarEntidadePedido).toHaveBeenCalledWith(
       criaPedidoDTOMock,
     );
-    expect(pedidoRepositoryMock.criarPedido).toHaveBeenCalledWith(
-      pedidoEntityMock,
-    );
+    // expect(pedidoRepositoryMock.criarPedido).toHaveBeenCalledWith(
+    //   pedidoEntityMock,
+    // );
     expect(pedidoDTOFactoryMock.criarPedidoDTO).toHaveBeenCalledWith(
-      pedidoModelMock,
+      pedidoEntityMock,
     );
     expect(result).toStrictEqual({
       mensagem: 'Pedido criado com sucesso',

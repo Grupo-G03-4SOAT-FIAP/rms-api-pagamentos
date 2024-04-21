@@ -32,7 +32,6 @@ describe('PedidoEntity', () => {
       numeroPedido,
       pago,
       cliente,
-      clientePedido,
       id,
     );
 

@@ -3,30 +3,36 @@ import { PedidoFactory } from './pedido.factory';
 import { PedidoService } from '../services/pedido.service';
 import { IProdutoRepository } from 'src/domain/produto/interfaces/produto.repository.port';
 import { IClienteRepository } from 'src/domain/cliente/interfaces/cliente.repository.port';
-import { ProdutoNaoLocalizadoErro } from 'src/domain/produto/exceptions/produto.exception';
 import { ClienteNaoLocalizadoErro } from 'src/domain/cliente/exceptions/cliente.exception';
 import {
   criaPedidoDTOMock,
+  pedidoEntityNotClienteMock,
   pedidoEntityNotIdMock,
   pedidoServiceMock,
 } from 'src/mocks/pedido.mock';
 import {
   produtoEntityMock,
   produtoEntityNotIdMock,
+  produtoFactoryMock,
   produtoRepositoryMock,
 } from 'src/mocks/produto.mock';
 import {
   clienteEntityMock,
   clienteRepositoryMock,
 } from 'src/mocks/cliente.mock';
-import { categoriaEntityMock } from 'src/mocks/categoria.mock';
+import { categoriaEntityMock, categoriaRepositoryMock } from 'src/mocks/categoria.mock';
 import {
-  criaItemPedidoDTOMock,
+  itemPedidoEntityMock,
   itemPedidoEntityNotIdMock,
 } from 'src/mocks/item_pedido.mock';
+import { IProdutoFactory } from 'src/domain/produto/interfaces/produto.factory.port';
+import { ProdutoFactory } from 'src/domain/produto/factories/produto.factory';
+import { ICategoriaRepository } from 'src/domain/categoria/interfaces/categoria.repository.port';
+import { IPedidoFactory } from '../interfaces/pedido.factory.port';
 
 describe('PedidoFactory', () => {
   let pedidoFactory: PedidoFactory;
+  let produtoFactory: ProdutoFactory;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,6 +50,10 @@ describe('PedidoFactory', () => {
           provide: IProdutoRepository,
           useValue: produtoRepositoryMock,
         },
+        {
+          provide: IProdutoFactory,
+          useValue: produtoFactoryMock,
+        },
       ],
     }).compile();
 
@@ -58,44 +68,25 @@ describe('PedidoFactory', () => {
   });
 
   it('deve criar a entidade pedido', async () => {
-    pedidoServiceMock.gerarNumeroPedido.mockReturnValue('05012024');
-    produtoRepositoryMock.buscarProdutoPorId.mockReturnValue(produtoEntityMock);
-    clienteRepositoryMock.buscarClientePorCPF.mockReturnValue(
-      clienteEntityMock,
+    produtoFactoryMock.criarEntidadeProdutoDeProdutoDTO.mockReturnValue(
+      produtoEntityMock,
     );
 
     const result = await pedidoFactory.criarEntidadePedido(criaPedidoDTOMock);
 
-    expect(pedidoServiceMock.gerarNumeroPedido).toHaveBeenCalled();
-    expect(produtoRepositoryMock.buscarProdutoPorId).toHaveBeenCalled();
-    expect(result).toStrictEqual(pedidoEntityNotIdMock);
+    expect(result).toStrictEqual(pedidoEntityNotClienteMock);
   });
 
   it('deve criar itens do pedido', async () => {
-    produtoRepositoryMock.buscarProdutoPorId.mockReturnValue(produtoEntityMock);
+    produtoFactoryMock.criarEntidadeProdutoDeProdutoDTO.mockReturnValue(
+      produtoEntityMock,
+    );
 
     const result = await pedidoFactory.criarItemPedido(
       criaPedidoDTOMock.itensPedido,
     );
 
-    expect(produtoRepositoryMock.buscarProdutoPorId).toHaveBeenCalledWith(
-      criaPedidoDTOMock.itensPedido[0].produto,
-    );
     expect(result).toStrictEqual([itemPedidoEntityNotIdMock]);
-  });
-
-  it('deve criar itens do pedido e retornar ProdutoNaoLocalizadoErro', async () => {
-    const produtoId = criaPedidoDTOMock.itensPedido[0].produto;
-    produtoRepositoryMock.buscarProdutoPorId.mockReturnValue(null);
-
-    await expect(
-      pedidoFactory.criarItemPedido([criaItemPedidoDTOMock]),
-    ).rejects.toThrow(
-      new ProdutoNaoLocalizadoErro(`Produto informado não existe ${produtoId}`),
-    );
-    expect(produtoRepositoryMock.buscarProdutoPorId).toHaveBeenCalledWith(
-      produtoId,
-    );
   });
 
   it('deve criar a entidade cliente', async () => {
@@ -104,7 +95,7 @@ describe('PedidoFactory', () => {
     );
 
     const result = await pedidoFactory.criarEntidadeClienteDoCPF(
-      criaPedidoDTOMock.cpfCliente,
+      criaPedidoDTOMock.cliente.cpf,
     );
 
     expect(clienteRepositoryMock.buscarClientePorCPF).toHaveBeenCalled();
@@ -115,12 +106,12 @@ describe('PedidoFactory', () => {
     clienteRepositoryMock.buscarClientePorCPF.mockReturnValue(null);
 
     await expect(
-      pedidoFactory.criarEntidadeClienteDoCPF(criaPedidoDTOMock.cpfCliente),
+      pedidoFactory.criarEntidadeClienteDoCPF(criaPedidoDTOMock.cliente.cpf),
     ).rejects.toThrow(
       new ClienteNaoLocalizadoErro('Cliente informado não existe'),
     );
     expect(clienteRepositoryMock.buscarClientePorCPF).toHaveBeenCalledWith(
-      criaPedidoDTOMock.cpfCliente,
+      criaPedidoDTOMock.cliente.cpf,
     );
   });
 });

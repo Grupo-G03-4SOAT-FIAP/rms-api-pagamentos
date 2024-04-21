@@ -6,6 +6,7 @@ import { CategoriaNaoLocalizadaErro } from 'src/domain/categoria/exceptions/cate
 import {
   AtualizaProdutoDTO,
   CriaProdutoDTO,
+  ProdutoDTO,
 } from 'src/presentation/rest/v1/presenters/produto/produto.dto';
 import { ProdutoEntity } from '../entities/produto.entity';
 
@@ -14,8 +15,7 @@ export class ProdutoFactory implements IProdutoFactory {
   constructor(
     @Inject(ICategoriaRepository)
     private readonly categoriaRepository: ICategoriaRepository,
-  ) {}
-
+  ) { }
   async criarEntidadeCategoria(categoriaId: string): Promise<CategoriaEntity> {
     const categoria =
       await this.categoriaRepository.buscarCategoriaPorId(categoriaId);
@@ -43,6 +43,25 @@ export class ProdutoFactory implements IProdutoFactory {
       produto.valorUnitario,
       produto.imagemUrl,
       produto.descricao,
+    );
+  }
+
+  async criarEntidadeProdutoDeProdutoDTO(
+    produto: ProdutoDTO,
+  ): Promise<ProdutoEntity> {
+    const categoriaEntity = new CategoriaEntity(
+      produto.categoria.nome,
+      produto.categoria.descricao,
+      produto.categoria.id
+    );
+
+    return new ProdutoEntity(
+      produto.nome,
+      categoriaEntity,
+      produto.valorUnitario,
+      produto.imagemUrl,
+      produto.descricao,
+      produto.id,
     );
   }
 }

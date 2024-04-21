@@ -21,9 +21,7 @@ import {
 import { BadRequestError } from '../../helpers/swagger/status-codes/bad_requests.swagger';
 import { NotFoundError } from '../../helpers/swagger/status-codes/not_found.swagger';
 import { MensagemMercadoPagoDTO } from '../../presenters/pedido/gatewaypag.dto';
-import { Authentication, CognitoUser } from '@nestjs-cognito/auth';
 import { ConfigService } from '@nestjs/config';
-import { CriaClienteDTO } from '../../presenters/cliente/cliente.dto';
 
 @Controller('pedido')
 @ApiTags('Pedido')
@@ -52,23 +50,11 @@ export class PedidoController {
     description: 'Pedido informado não existe',
     type: NotFoundError,
   })
-  @Authentication()
-  async checkout(
-    @CognitoUser('username') username: string,
-    @CognitoUser('name') name: string,
-    @CognitoUser('email') email: string,
+  async criarPedido(
     @Body() criaPedidoDTO: CriaPedidoDTO,
   ) {
-    const criaClienteDTO = new CriaClienteDTO();
-      criaPedidoDTO.cpfCliente = username;
-      criaClienteDTO.nome = name;
-      criaClienteDTO.email = email;
-      criaClienteDTO.cpf = username;
     try {
-      return await this.pedidoUseCase.criarPedido(
-        criaClienteDTO,
-        criaPedidoDTO,
-      );
+      return await this.pedidoUseCase.criarPedido(criaPedidoDTO);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

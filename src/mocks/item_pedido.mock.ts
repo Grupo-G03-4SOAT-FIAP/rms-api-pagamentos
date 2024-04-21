@@ -12,6 +12,7 @@ import {
   ItemPedidoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/item_pedido.dto';
 import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido.model';
+import { ProdutoDTO } from 'src/presentation/rest/v1/presenters/produto/produto.dto';
 
 // Mock para simular dados da tabela item pedido no banco de dados
 export const itemPedidoModelMock = new ItemPedidoModel();
@@ -37,7 +38,8 @@ export const itemPedidoEntityNotIdMock = new ItemPedidoEntity(
 
 // Mock para simular o DTO com os dados recebidos pelo usuario ao criar um pedido
 export const criaItemPedidoDTOMock = new CriaItemPedidoDTO();
-criaItemPedidoDTOMock.produto = '0a14aa4e-75e7-405f-8301-81f60646c93d';
+criaItemPedidoDTOMock.produto = new ProdutoDTO();
+criaItemPedidoDTOMock.produto.id = '0a14aa4e-75e7-405f-8301-81f60646c93d';
 criaItemPedidoDTOMock.quantidade = 2;
 
 // Mock para simular o DTO com dados de item pedido enviados para o usuario ao responder uma requisição

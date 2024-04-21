@@ -11,7 +11,6 @@ import {
   pedidoDTOMock,
   pedidoUseCaseMock,
 } from 'src/mocks/pedido.mock';
-import { CognitoTestingModule } from '@nestjs-cognito/testing';
 import { ConfigService } from '@nestjs/config';
 import { clienteDTOMock, clienteDTONotIdMock } from 'src/mocks/cliente.mock';
 
@@ -21,13 +20,6 @@ describe('PedidoController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CognitoTestingModule.register({
-          identityProvider: {
-            region: 'eu-west-1',
-          },
-        }),
-      ],
       providers: [
         PedidoController,
         {
@@ -57,17 +49,9 @@ describe('PedidoController', () => {
 
     pedidoUseCaseMock.criarPedido.mockReturnValue(HTTPResponse);
 
-    const result = await pedidoController.checkout(
-      clienteDTOMock.cpf,
-      clienteDTOMock.nome,
-      clienteDTOMock.email,
-      criaPedidoDTOMock,
-    );
+    const result = await pedidoController.criarPedido(criaPedidoDTOMock);
 
-    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(
-      clienteDTONotIdMock,
-      criaPedidoDTOMock,
-    );
+    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(criaPedidoDTOMock);
     expect(result).toStrictEqual(HTTPResponse);
   });
 
@@ -77,17 +61,9 @@ describe('PedidoController', () => {
     );
 
     await expect(
-      pedidoController.checkout(
-        clienteDTOMock.cpf,
-        clienteDTOMock.nome,
-        clienteDTOMock.email,
-        criaPedidoDTOMock,
-      ),
+      pedidoController.criarPedido(criaPedidoDTOMock),
     ).rejects.toThrow(new NotFoundException('Cliente informado não existe'));
-    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(
-      clienteDTONotIdMock,
-      criaPedidoDTOMock,
-    );
+    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(criaPedidoDTOMock);
   });
 
   it('deve retornar a fila de pedidos', async () => {

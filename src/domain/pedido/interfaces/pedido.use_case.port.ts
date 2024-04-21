@@ -12,7 +12,6 @@ export interface IPedidoUseCase {
   listarPedidosRecebido(): Promise<PedidoDTO[] | []>;
   buscarPedido(idPedido: string): Promise<PedidoDTO>;
   criarPedido(
-    criaClienteDTO: CriaClienteDTO,
     criaPedidoDTO: CriaPedidoDTO,
   ): Promise<HTTPResponse<PedidoDTO>>;
   editarPedido(

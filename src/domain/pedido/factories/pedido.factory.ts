@@ -5,13 +5,13 @@ import { IClienteRepository } from 'src/domain/cliente/interfaces/cliente.reposi
 import { IProdutoRepository } from 'src/domain/produto/interfaces/produto.repository.port';
 import { CriaItemPedidoDTO } from 'src/presentation/rest/v1/presenters/pedido/item_pedido.dto';
 import { ItemPedidoEntity } from '../entities/item_pedido.entity';
-import { ProdutoNaoLocalizadoErro } from 'src/domain/produto/exceptions/produto.exception';
 import { ClienteEntity } from 'src/domain/cliente/entities/cliente.entity';
 import { ClienteNaoLocalizadoErro } from 'src/domain/cliente/exceptions/cliente.exception';
 import { CriaPedidoDTO } from 'src/presentation/rest/v1/presenters/pedido/pedido.dto';
 import { PedidoEntity } from '../entities/pedido.entity';
 import { StatusPedido } from '../enums/pedido.enum';
 import { ClienteDTO } from 'src/presentation/rest/v1/presenters/cliente/cliente.dto';
+import { IProdutoFactory } from 'src/domain/produto/interfaces/produto.factory.port';
 
 @Injectable()
 export class PedidoFactory implements IPedidoFactory {
@@ -21,6 +21,8 @@ export class PedidoFactory implements IPedidoFactory {
     private readonly clienteRepository: IClienteRepository,
     @Inject(IProdutoRepository)
     private readonly produtoRepository: IProdutoRepository,
+    @Inject(IProdutoFactory)
+    private readonly produtoFactory: IProdutoFactory,
   ) {}
 
   async criarEntidadeCliente(clienteDTO: ClienteDTO): Promise<ClienteEntity> {
@@ -37,16 +39,8 @@ export class PedidoFactory implements IPedidoFactory {
   ): Promise<ItemPedidoEntity[]> {
     const itensPedido = await Promise.all(
       itens.map(async (item) => {
-        const produto = await this.produtoRepository.buscarProdutoPorId(
-          item.produto,
-        );
-        if (!produto) {
-          throw new ProdutoNaoLocalizadoErro(
-            `Produto informado não existe ${item.produto}`,
-          );
-        }
-
-        const itemPedidoEntity = new ItemPedidoEntity(produto, item.quantidade);
+        const produto = await this.produtoFactory.criarEntidadeProdutoDeProdutoDTO(item.produto);
+        const itemPedidoEntity = new ItemPedidoEntity(produto, item.quantidade, item.id);
         return itemPedidoEntity;
       }),
     );
@@ -65,14 +59,15 @@ export class PedidoFactory implements IPedidoFactory {
   }
 
   async criarEntidadePedido(pedido: CriaPedidoDTO): Promise<PedidoEntity> {
-    const numeroPedido = this.pedidoService.gerarNumeroPedido();
     const itensPedido = await this.criarItemPedido(pedido.itensPedido);
 
     return new PedidoEntity(
       itensPedido,
       StatusPedido.RECEBIDO,
-      numeroPedido,
+      pedido.numeroPedido,
       false,
+      undefined,
+      pedido.id,
     );
   }
 }

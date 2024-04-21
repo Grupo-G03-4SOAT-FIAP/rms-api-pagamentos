@@ -110,6 +110,7 @@ export const produtoSQLDTOFactoryMock = {
 export const produtoFactoryMock = {
   criarEntidadeCategoria: jest.fn(),
   criarEntidadeProduto: jest.fn(),
+  criarEntidadeProdutoDeProdutoDTO: jest.fn(),
 };
 
 // Mock jest das funções da factory que cria DTO produto
