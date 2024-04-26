@@ -18,6 +18,8 @@ import { ProdutoModule } from './produto.module';
 import { ClienteModule } from './client.module';
 import { PedidoService } from '../domain/pedido/services/pedido.service';
 import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido.model';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
+import { ApiPedidosService } from 'src/infrastructure/services/api_pedidos/apipedidos.service';
 
 @Module({
   imports: [
@@ -55,6 +57,11 @@ import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido
     {
       provide: IGatewayPagamentoService,
       useClass: GatewayMercadoPagoService,
+    },
+    ApiPedidosService,
+    {
+      provide: IApiPedidosService,
+      useClass: ApiPedidosService,
     },
     SQLDTOFactory,
     PedidoService,

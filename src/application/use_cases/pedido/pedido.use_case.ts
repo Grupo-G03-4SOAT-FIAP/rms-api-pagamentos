@@ -5,6 +5,7 @@ import { ClienteEntity } from 'src/domain/cliente/entities/cliente.entity';
 import { IClienteRepository } from 'src/domain/cliente/interfaces/cliente.repository.port';
 import { PedidoEntity } from 'src/domain/pedido/entities/pedido.entity';
 import { PedidoNaoLocalizadoErro } from 'src/domain/pedido/exceptions/pedido.exception';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
@@ -32,6 +33,8 @@ export class PedidoUseCase implements IPedidoUseCase {
     private readonly pedidoFactory: IPedidoFactory,
     @Inject(IGatewayPagamentoService)
     private readonly gatewayPagamentoService: IGatewayPagamentoService,
+    @Inject(IApiPedidosService)
+    private readonly apiPedidosService: IApiPedidosService,
     @Inject(IPedidoDTOFactory)
     private readonly pedidoDTOFactory: IPedidoDTOFactory,
     private configService: ConfigService,
@@ -122,24 +125,30 @@ export class PedidoUseCase implements IPedidoUseCase {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
+
+    // TODO: Gravar log do id, topic e mensagem do Mercado Pago no MongoDB para auditoria
+
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =
         await this.gatewayPagamentoService.consultarPedido(id);
       const idInternoPedido = pedidoGatewayPag.external_reference;
       if (this.verificarPagamento(pedidoGatewayPag)) {
-        const buscaPedido =
-          await this.pedidoRepository.buscarPedido(idInternoPedido);
-        if (!buscaPedido) {
-          throw new PedidoNaoLocalizadoErro('Pedido não localizado');
-        }
-        await this.pedidoRepository.editarStatusPagamento(
-          idInternoPedido,
-          true,
-        );
-        await this.pedidoRepository.editarStatusPedido(
-          idInternoPedido,
-          'em preparacao',
-        );
+        // const buscaPedido =
+        //   await this.pedidoRepository.buscarPedido(idInternoPedido);
+        // if (!buscaPedido) {
+        //   throw new PedidoNaoLocalizadoErro('Pedido não localizado');
+        // }
+        // await this.pedidoRepository.editarStatusPagamento(
+        //   idInternoPedido,
+        //   true,
+        // );
+        // await this.pedidoRepository.editarStatusPedido(
+        //   idInternoPedido,
+        //   'em preparacao',
+        // );
+
+        // TODO: Atualizar o status do pedido para "pago": true e "statusPedido": "em preparacao" na API de Pedidos
+        this.apiPedidosService.atualizarStatusPedido(idInternoPedido);
       }
       return {
         mensagem: 'Mensagem consumida com sucesso',

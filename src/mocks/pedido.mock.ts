@@ -154,6 +154,11 @@ export const gatewayPagamentoServiceMock = {
   consultarPedido: jest.fn(),
 };
 
+// Mock jest das funções do service da api de pedidos
+export const apiPedidosServiceMock = {
+  atualizarStatusPedido: jest.fn(),
+};
+
 // Mock jest das funções da factory que cria entidade pedido
 export const pedidoFactoryMock = {
   criarItemPedido: jest.fn(),

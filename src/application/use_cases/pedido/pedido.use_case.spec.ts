@@ -7,6 +7,7 @@ import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypa
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import { PedidoNaoLocalizadoErro } from 'src/domain/pedido/exceptions/pedido.exception';
 import {
+  apiPedidosServiceMock,
   atualizaPedidoDTOMock,
   configServiceMock,
   criaPedidoDTOMock,
@@ -26,6 +27,7 @@ import {
   clienteRepositoryMock,
 } from 'src/mocks/cliente.mock';
 import { IClienteRepository } from 'src/domain/cliente/interfaces/cliente.repository.port';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 
 describe('PedidoUseCase', () => {
   let pedidoUseCase: PedidoUseCase;
@@ -50,6 +52,10 @@ describe('PedidoUseCase', () => {
         {
           provide: IGatewayPagamentoService,
           useValue: gatewayPagamentoServiceMock,
+        },
+        {
+          provide: IApiPedidosService,
+          useValue: apiPedidosServiceMock,
         },
         {
           provide: IPedidoDTOFactory,
@@ -138,13 +144,8 @@ describe('PedidoUseCase', () => {
       mensagemGatewayPagamentoDTO,
     );
 
-    expect(pedidoRepositoryMock.editarStatusPagamento).toHaveBeenCalledWith(
+    expect(apiPedidosServiceMock.atualizarStatusPedido).toHaveBeenCalledWith(
       pedidoId,
-      true,
-    );
-    expect(pedidoRepositoryMock.editarStatusPedido).toHaveBeenCalledWith(
-      pedidoId,
-      'em preparacao',
     );
     expect(result).toStrictEqual({
       mensagem: 'Mensagem consumida com sucesso',
