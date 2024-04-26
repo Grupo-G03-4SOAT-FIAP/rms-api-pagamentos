@@ -81,19 +81,3 @@ export class PedidoDTO {
   @ApiProperty({ description: 'QR Code para pagamento no formato EMVCo' })
   qrCode: string = null;
 }
-function IsInt(arg0: { message: string; }): (target: CriaPedidoDTO, propertyKey: "numeroPedido") => void {
-  throw new Error('Function not implemented.');
-}
-
-function Min(arg0: number, arg1: { message: string; }): (target: CriaPedidoDTO, propertyKey: "numeroPedido") => void {
-  throw new Error('Function not implemented.');
-}
-
-function ArrayMinSize(arg0: number, arg1: { message: string; }): (target: CriaPedidoDTO, propertyKey: "itensPedido") => void {
-  throw new Error('Function not implemented.');
-}
-
-function ValidateNested(arg0: { each: boolean; message: string; }): (target: CriaPedidoDTO, propertyKey: "itensPedido") => void {
-  throw new Error('Function not implemented.');
-}
-
