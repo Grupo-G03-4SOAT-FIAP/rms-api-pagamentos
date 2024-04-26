@@ -50,9 +50,7 @@ export class PedidoController {
     description: 'Pedido informado não existe',
     type: NotFoundError,
   })
-  async criarPedido(
-    @Body() criaPedidoDTO: CriaPedidoDTO,
-  ) {
+  async criarPedido(@Body() criaPedidoDTO: CriaPedidoDTO) {
     try {
       return await this.pedidoUseCase.criarPedido(criaPedidoDTO);
     } catch (error) {

@@ -15,7 +15,7 @@ export class ProdutoFactory implements IProdutoFactory {
   constructor(
     @Inject(ICategoriaRepository)
     private readonly categoriaRepository: ICategoriaRepository,
-  ) { }
+  ) {}
   async criarEntidadeCategoria(categoriaId: string): Promise<CategoriaEntity> {
     const categoria =
       await this.categoriaRepository.buscarCategoriaPorId(categoriaId);
@@ -52,7 +52,7 @@ export class ProdutoFactory implements IProdutoFactory {
     const categoriaEntity = new CategoriaEntity(
       produto.categoria.nome,
       produto.categoria.descricao,
-      produto.categoria.id
+      produto.categoria.id,
     );
 
     return new ProdutoEntity(

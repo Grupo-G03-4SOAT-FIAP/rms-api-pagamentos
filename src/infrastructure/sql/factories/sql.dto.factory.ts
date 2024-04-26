@@ -61,9 +61,6 @@ export class SQLDTOFactory {
 
   criarPedidoDTO(pedido: PedidoModel): PedidoEntity {
     const clienteEntity = this.criarClienteDTOFromClienteModel(pedido.cliente);
-    const clientePedidoEntity = this.criarClienteDTOFromClientePedidoModel(
-      pedido.clientePedido,
-    );
 
     const itensPedido = pedido.itensPedido.map((itemPedidoModel) => {
       const produtoEntity = this.criarProdutoDTO(itemPedidoModel.produto);

@@ -39,8 +39,15 @@ export class PedidoFactory implements IPedidoFactory {
   ): Promise<ItemPedidoEntity[]> {
     const itensPedido = await Promise.all(
       itens.map(async (item) => {
-        const produto = await this.produtoFactory.criarEntidadeProdutoDeProdutoDTO(item.produto);
-        const itemPedidoEntity = new ItemPedidoEntity(produto, item.quantidade, item.id);
+        const produto =
+          await this.produtoFactory.criarEntidadeProdutoDeProdutoDTO(
+            item.produto,
+          );
+        const itemPedidoEntity = new ItemPedidoEntity(
+          produto,
+          item.quantidade,
+          item.id,
+        );
         return itemPedidoEntity;
       }),
     );

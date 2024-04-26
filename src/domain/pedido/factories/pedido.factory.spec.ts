@@ -7,7 +7,6 @@ import { ClienteNaoLocalizadoErro } from 'src/domain/cliente/exceptions/cliente.
 import {
   criaPedidoDTOMock,
   pedidoEntityNotClienteMock,
-  pedidoEntityNotIdMock,
   pedidoServiceMock,
 } from 'src/mocks/pedido.mock';
 import {
@@ -20,19 +19,12 @@ import {
   clienteEntityMock,
   clienteRepositoryMock,
 } from 'src/mocks/cliente.mock';
-import { categoriaEntityMock, categoriaRepositoryMock } from 'src/mocks/categoria.mock';
-import {
-  itemPedidoEntityMock,
-  itemPedidoEntityNotIdMock,
-} from 'src/mocks/item_pedido.mock';
+import { categoriaEntityMock } from 'src/mocks/categoria.mock';
+import { itemPedidoEntityNotIdMock } from 'src/mocks/item_pedido.mock';
 import { IProdutoFactory } from 'src/domain/produto/interfaces/produto.factory.port';
-import { ProdutoFactory } from 'src/domain/produto/factories/produto.factory';
-import { ICategoriaRepository } from 'src/domain/categoria/interfaces/categoria.repository.port';
-import { IPedidoFactory } from '../interfaces/pedido.factory.port';
 
 describe('PedidoFactory', () => {
   let pedidoFactory: PedidoFactory;
-  let produtoFactory: ProdutoFactory;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

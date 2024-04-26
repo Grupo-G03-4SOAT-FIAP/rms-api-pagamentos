@@ -22,7 +22,6 @@ import {
   pedidoRepositoryMock,
 } from 'src/mocks/pedido.mock';
 import {
-  clienteDTOMock,
   clienteModelMock,
   clienteRepositoryMock,
 } from 'src/mocks/cliente.mock';

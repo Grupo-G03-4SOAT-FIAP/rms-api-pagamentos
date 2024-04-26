@@ -11,7 +11,6 @@ describe('PedidoEntity', () => {
   let numeroPedido: string;
   let pago: boolean;
   let cliente: ClienteEntity;
-  let clientePedido: ClienteEntity;
   let id: string;
 
   beforeEach(() => {
@@ -21,7 +20,6 @@ describe('PedidoEntity', () => {
     numeroPedido = '05012024';
     pago = false;
     cliente = clienteEntityMock;
-    clientePedido = clienteEntityMock;
     id = '0a14aa4e-75e7-405f-8301-81f60646c93d';
   });
 

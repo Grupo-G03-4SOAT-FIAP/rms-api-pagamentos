@@ -11,7 +11,6 @@ import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.facto
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IPedidoUseCase } from 'src/domain/pedido/interfaces/pedido.use_case.port';
-import { CriaClienteDTO } from 'src/presentation/rest/v1/presenters/cliente/cliente.dto';
 import {
   MensagemMercadoPagoDTO,
   PedidoGatewayPagamentoDTO,
@@ -68,8 +67,7 @@ export class PedidoUseCase implements IPedidoUseCase {
     //const pedidoCriado = await this.pedidoRepository.criarPedido(pedido);
     const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedido);
     if (this.mercadoPagoIsEnabled()) {
-      const qrData =
-        await this.gatewayPagamentoService.criarPedido(pedido);
+      const qrData = await this.gatewayPagamentoService.criarPedido(pedido);
       pedidoDTO.qrCode = qrData;
     }
     return {
@@ -125,7 +123,6 @@ export class PedidoUseCase implements IPedidoUseCase {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
-
     // TODO: Gravar log do id, topic e mensagem do Mercado Pago no MongoDB para auditoria
 
     if (id && topic === 'merchant_order') {

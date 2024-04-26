@@ -12,7 +12,6 @@ import {
   pedidoUseCaseMock,
 } from 'src/mocks/pedido.mock';
 import { ConfigService } from '@nestjs/config';
-import { clienteDTOMock, clienteDTONotIdMock } from 'src/mocks/cliente.mock';
 
 describe('PedidoController', () => {
   let pedidoController: PedidoController;
@@ -51,7 +50,9 @@ describe('PedidoController', () => {
 
     const result = await pedidoController.criarPedido(criaPedidoDTOMock);
 
-    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(criaPedidoDTOMock);
+    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(
+      criaPedidoDTOMock,
+    );
     expect(result).toStrictEqual(HTTPResponse);
   });
 
@@ -63,7 +64,9 @@ describe('PedidoController', () => {
     await expect(
       pedidoController.criarPedido(criaPedidoDTOMock),
     ).rejects.toThrow(new NotFoundException('Cliente informado não existe'));
-    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(criaPedidoDTOMock);
+    expect(pedidoUseCaseMock.criarPedido).toHaveBeenCalledWith(
+      criaPedidoDTOMock,
+    );
   });
 
   it('deve retornar a fila de pedidos', async () => {

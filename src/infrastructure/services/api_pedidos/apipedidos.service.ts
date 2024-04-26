@@ -7,9 +7,7 @@ import axios from 'axios';
 export class ApiPedidosService implements IApiPedidosService {
   private _baseUrlApiPedidos: string;
 
-  constructor(
-    private configService: ConfigService,
-  ) {
+  constructor(private configService: ConfigService) {
     this._baseUrlApiPedidos = this.configService.get<string>(
       'BASE_URL_API_PEDIDOS',
     );
@@ -18,28 +16,28 @@ export class ApiPedidosService implements IApiPedidosService {
   async atualizarStatusPedido(idPedido: string): Promise<void> {
     // TODO: Fazer request para a API de Pedidos em PUT /pedidos:id aqui
 
-    let data = JSON.stringify({
-      "pago": true,
-      "statusPedido": "em preparacao"
+    const data = JSON.stringify({
+      pago: true,
+      statusPedido: 'em preparacao',
     });
 
-    let config = {
+    const config = {
       method: 'put',
       maxBodyLength: Infinity,
       url: `${this._baseUrlApiPedidos}/pedido/${idPedido}`,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      data: data
+      data: data,
     };
 
-    await axios.request(config)
+    await axios
+      .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
       })
       .catch((error) => {
         console.log(error);
       });
-
   }
 }
