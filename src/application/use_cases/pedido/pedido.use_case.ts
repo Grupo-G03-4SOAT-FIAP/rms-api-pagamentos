@@ -39,7 +39,7 @@ export class PedidoUseCase implements IPedidoUseCase {
     pedidoDTO.qrCode = qrData;
 
     // TODO: Gravar no MongoDB o pedido.id e o respectivo QR Code gerado pelo Mercado Pago
-    // await this.pedidoRepository.registrarQRCode(pedido.id, qrData, new Date());
+    await this.pedidoRepository.registrarQRCode(pedido.id, qrData, new Date());
 
     return {
       mensagem: 'Pedido criado com sucesso',

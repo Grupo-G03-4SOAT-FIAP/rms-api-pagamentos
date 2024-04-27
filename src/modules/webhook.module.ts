@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PedidoDTOFactory } from '../domain/pedido/factories/pedido.dto.factory';
 import { PedidoFactory } from '../domain/pedido/factories/pedido.factory';
 import { IPedidoDTOFactory } from '../domain/pedido/interfaces/pedido.dto.factory.port';
@@ -21,9 +21,11 @@ import { WebhookUseCase } from 'src/application/use_cases/webhook/webhook.use_ca
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
 import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
+import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
 
 @Module({
   controllers: [WebhookController],
+  imports: [forwardRef(() => MongoDataServicesModule)],
   providers: [
     WebhookUseCase,
     {

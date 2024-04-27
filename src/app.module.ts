@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { AppController } from './presentation/rest/v1/controllers/app/app.contro
 import { AppUseCase } from './application/use_cases/app/app.use_case';
 import { PedidoModule } from './modules/pedido.module';
 import { WebhookModule } from './modules/webhook.module';
+import { MongoDataServicesModule } from './infrastructure/mongo/mongo-data-services.module';
 
 @Module({
   imports: [
@@ -17,10 +18,10 @@ import { WebhookModule } from './modules/webhook.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
-      useClass: PostgresConfigService,
-      inject: [PostgresConfigService],
-    }),
+    // TypeOrmModule.forRootAsync({
+    //   useClass: PostgresConfigService,
+    //   inject: [PostgresConfigService],
+    // }),
   ],
   controllers: [AppController],
   providers: [AppUseCase],

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PedidoUseCase } from '../application/use_cases/pedido/pedido.use_case';
 import { PedidoDTOFactory } from '../domain/pedido/factories/pedido.dto.factory';
 import { PedidoFactory } from '../domain/pedido/factories/pedido.factory';
@@ -21,9 +21,11 @@ import { CategoriaDTOFactory } from 'src/domain/categoria/factories/categoria.dt
 import { ICategoriaDTOFactory } from 'src/domain/categoria/interfaces/categoria.dto.factory.port';
 import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
 import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
+import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
 
 @Module({
   controllers: [PedidoController],
+  imports: [forwardRef(() => MongoDataServicesModule)],
   providers: [
     PedidoUseCase,
     {
