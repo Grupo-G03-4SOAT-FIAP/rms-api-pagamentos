@@ -1,10 +1,6 @@
 import { Repository } from 'typeorm';
 import {
-  clienteModelMock,
-  clienteEntityMock,
-  clienteDTOMock,
-} from './cliente.mock';
-import {
+  ItemPedidoDTOMock,
   itemPedidoDTOMock,
   itemPedidoEntityMock,
   itemPedidoEntityNotIdMock,
@@ -14,7 +10,6 @@ import { PedidoModel } from 'src/infrastructure/sql/models/pedido.model';
 import { PedidoEntity } from 'src/domain/pedido/entities/pedido.entity';
 import { StatusPedido } from 'src/domain/pedido/enums/pedido.enum';
 import {
-  AtualizaPedidoDTO,
   CriaPedidoDTO,
   PedidoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/pedido.dto';
@@ -29,7 +24,6 @@ export const pedidoModelMock = new PedidoModel();
 pedidoModelMock.id = '0a14aa4e-75e7-405f-8301-81f60646c93d';
 pedidoModelMock.numeroPedido = '05012024';
 pedidoModelMock.itensPedido = [itemPedidoModelMock];
-pedidoModelMock.cliente = clienteModelMock;
 pedidoModelMock.pago = false;
 pedidoModelMock.statusPedido = 'recebido';
 pedidoModelMock.criadoEm = '2024-01-25T00:05:04.941Z';
@@ -41,11 +35,7 @@ export const pedidoEntityMock = new PedidoEntity(
   StatusPedido.RECEBIDO,
   '05012024',
   false,
-  clienteEntityMock,
-  clienteEntityMock,
   '0a14aa4e-75e7-405f-8301-81f60646c93d',
-  '2024-01-25T00:05:04.941Z',
-  '2024-01-25T00:05:04.941Z',
 );
 
 // Mock para simular dados da entidade pedido sem data criação e atualização
@@ -54,8 +44,6 @@ export const pedidoEntityNotDateMock = new PedidoEntity(
   StatusPedido.RECEBIDO,
   '05012024',
   false,
-  clienteEntityMock,
-  clienteEntityMock,
   '0a14aa4e-75e7-405f-8301-81f60646c93d',
 );
 
@@ -69,22 +57,18 @@ export const pedidoEntityNotIdMock = new PedidoEntity(
 
 // Mock para simular dados da entidade pedido sem cliente
 export const pedidoEntityNotClienteMock = new PedidoEntity(
-  [itemPedidoEntityMock],
+  [itemPedidoEntityNotIdMock],
   StatusPedido.RECEBIDO,
   '05012024',
   false,
+  '0a14aa4e-75e7-405f-8301-81f60646c93d',
 );
 
 // Mock para simular o DTO com os dados recebidos pelo usuario ao criar um pedido
 export const criaPedidoDTOMock = new CriaPedidoDTO();
-criaPedidoDTOMock.itensPedido = [
-  { produto: '0a14aa4e-75e7-405f-8301-81f60646c93d', quantidade: 2 },
-];
-criaPedidoDTOMock.cpfCliente = '83904665030';
-
-// Mock para simular o DTO com os dados recebidos pelo usuario ao atualizar um pedido
-export const atualizaPedidoDTOMock = new AtualizaPedidoDTO();
-atualizaPedidoDTOMock.statusPedido = StatusPedido.RECEBIDO;
+criaPedidoDTOMock.id = pedidoModelMock.id;
+criaPedidoDTOMock.numeroPedido = pedidoModelMock.numeroPedido;
+criaPedidoDTOMock.itensPedido = [ItemPedidoDTOMock];
 
 // Mock para simular o DTO com dados de pedido enviados para o usuario ao responder uma requisição
 export const pedidoDTOMock = new PedidoDTO();
@@ -93,9 +77,6 @@ pedidoDTOMock.numeroPedido = pedidoModelMock.numeroPedido;
 pedidoDTOMock.itensPedido = [itemPedidoDTOMock];
 pedidoDTOMock.pago = false;
 pedidoDTOMock.statusPedido = pedidoModelMock.statusPedido;
-pedidoDTOMock.criadoEm = '2024-01-25T00:05:04.941Z';
-pedidoDTOMock.atualizadoEm = '2024-01-25T00:05:04.941Z';
-pedidoDTOMock.cliente = clienteDTOMock;
 pedidoDTOMock.qrCode = null;
 
 export const mensagemGatewayPagamentoDTO = new MensagemMercadoPagoDTO();
@@ -124,14 +105,6 @@ export const pedidoTypeORMMock: jest.Mocked<Repository<PedidoModel>> = {
   Repository<PedidoModel>
 >;
 
-export const configServiceMock = {
-  get: jest.fn((key: string) => {
-    if (key === 'ENABLE_MERCADOPAGO') {
-      return 'false';
-    }
-  }),
-};
-
 // Mock jest das funções do repository pedido
 export const pedidoRepositoryMock = {
   criarPedido: jest.fn(),
@@ -153,10 +126,14 @@ export const gatewayPagamentoServiceMock = {
   consultarPedido: jest.fn(),
 };
 
+// Mock jest das funções do service da api de pedidos
+export const apiPedidosServiceMock = {
+  atualizarStatusPedido: jest.fn(),
+};
+
 // Mock jest das funções da factory que cria entidade pedido
 export const pedidoFactoryMock = {
   criarItemPedido: jest.fn(),
-  criarEntidadeCliente: jest.fn(),
   criarEntidadePedido: jest.fn(),
 };
 
@@ -165,11 +142,6 @@ export const pedidoDTOFactoryMock = {
   criarPedidoDTO: jest.fn(),
   criarListaPedidoDTO: jest.fn(),
   criarListaItemPedidoDTO: jest.fn(),
-};
-
-// Mock jest das funções do service que cria numero do pedido
-export const pedidoServiceMock = {
-  gerarNumeroPedido: jest.fn(),
 };
 
 // Mock jest das funções do use case pedido

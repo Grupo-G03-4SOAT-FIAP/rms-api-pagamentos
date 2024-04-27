@@ -3,12 +3,10 @@ import { ProdutoEntity } from 'src/domain/produto/entities/produto.entity';
 export class ItemPedidoEntity {
   private _produto: ProdutoEntity;
   private _quantidade: number;
-  private _id?: string;
 
-  constructor(produto: ProdutoEntity, quantidade: number, id?: string) {
+  constructor(produto: ProdutoEntity, quantidade: number) {
     this._produto = produto;
     this._quantidade = quantidade;
-    this._id = id;
   }
 
   get produto(): ProdutoEntity {
@@ -25,13 +23,5 @@ export class ItemPedidoEntity {
 
   set quantidade(quantidade: number) {
     this._quantidade = quantidade;
-  }
-
-  get id(): string | undefined {
-    return this._id;
-  }
-
-  set id(id: string | undefined) {
-    this._id = id;
   }
 }
