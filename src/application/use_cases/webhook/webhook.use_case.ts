@@ -5,10 +5,7 @@ import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.facto
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
-import {
-  MensagemMercadoPagoDTO,
-  PedidoGatewayPagamentoDTO,
-} from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
+import { PedidoGatewayPagamentoDTO } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
 
 @Injectable()
 export class WebhookUseCase implements IWebhookUseCase {
@@ -29,14 +26,10 @@ export class WebhookUseCase implements IWebhookUseCase {
     id: string,
     topic: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    mensagem: MensagemMercadoPagoDTO,
+    //mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
     // TODO: Gravar no MongoDB os parâmentros id, topic e mensagem que recebemos do Mercado Pago, para auditoria
-    // await this.pedidoRepository.guardarMsgWebhook({
-    //   id: id,
-    //   topic: topic,
-    //   mensagem: mensagem,
-    // });
+    await this.pedidoRepository.guardarMsgWebhook(id, topic);
 
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =

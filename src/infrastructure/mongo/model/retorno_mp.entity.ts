@@ -6,7 +6,9 @@ export type RetornoMPDocument = HydratedDocument<RetornoMP>;
 @Schema()
 export class RetornoMP {
   @Prop()
-  message: string;
+  id: string;
+  @Prop()
+  topic: string;
 }
 
 export const RetornoMPSchema = SchemaFactory.createForClass(RetornoMP);

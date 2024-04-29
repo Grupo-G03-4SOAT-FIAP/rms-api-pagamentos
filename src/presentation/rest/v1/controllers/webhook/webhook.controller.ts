@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   HttpCode,
   Inject,
@@ -11,7 +10,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import { BadRequestError } from '../../helpers/swagger/status-codes/bad_requests.swagger';
 import { NotFoundError } from '../../helpers/swagger/status-codes/not_found.swagger';
-import { MensagemMercadoPagoDTO } from '../../presenters/pedido/gatewaypag.dto';
 
 @Controller('webhook')
 @ApiTags('Webhook')
@@ -40,10 +38,10 @@ export class WebhookController {
   async consumirMensagem(
     @Query('id') id: string,
     @Query('topic') topic: string,
-    @Body() mensagem: MensagemMercadoPagoDTO,
+    //@Body() mensagem: MensagemMercadoPagoDTO,
   ) {
     try {
-      return await this.webhookUseCase.consumirMensagem(id, topic, mensagem);
+      return await this.webhookUseCase.consumirMensagem(id, topic);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

@@ -1,3 +1,4 @@
 export class RetornoMP {
-  message: any;
+  id: string;
+  topic: any;
 }
