@@ -1,10 +1,10 @@
 version: '3.9'
 
 services:
-  db:
-    container_name: db
-    hostname: db
-    image: postgres:16.1
+  db-pagamentos:
+    container_name: db-pagamentos
+    hostname: db-pagamentos
+    image: postgres:15.6
     ports:
       - '5432:5432'
     expose:
@@ -28,9 +28,9 @@ services:
     networks:
       - default
 
-  api:
-    container_name: api
-    hostname: api
+  api-pagamentos:
+    container_name: api-pagamentos
+    hostname: api-pagamentos
     build:
       context: .
       dockerfile: Dockerfile
@@ -41,15 +41,12 @@ services:
     env_file:
       - .env
     environment:
-      DB_HOST: db
+      DB_HOST: db-pagamentos
       DB_PORT: 5432
       DB_USER: ${DB_USERNAME:-pguser}
       DB_PASSWORD: ${DB_PASSWORD:-pgpwd}
       DB_NAME: ${DB_NAME:-rms}
       DB_SSL: ${DB_SSL:-false}
-      COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID:-}
-      COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID:-}
-      ENABLE_MERCADOPAGO: ${ENABLE_MERCADOPAGO:-false}
       ACCESS_TOKEN_MERCADOPAGO: ${ACCESS_TOKEN_MERCADOPAGO:-}
       USER_ID_MERCADOPAGO: ${USER_ID_MERCADOPAGO:-}
       EXTERNAL_POS_ID_MERCADOPAGO: ${EXTERNAL_POS_ID_MERCADOPAGO:-}
@@ -59,7 +56,7 @@ services:
     networks:
       - default
     depends_on:
-      - db
+      - db-pagamentos
 
 networks:
   default:
