@@ -4,7 +4,7 @@ services:
   db-pagamentos:
     container_name: db-pagamentos
     hostname: db-pagamentos
-    image: postgres:16.1
+    image: postgres:15.6
     ports:
       - '5432:5432'
     expose:
