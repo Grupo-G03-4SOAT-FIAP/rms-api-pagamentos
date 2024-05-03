@@ -6,7 +6,6 @@ import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.facto
 import {
   apiPedidosServiceMock,
   gatewayPagamentoServiceMock,
-  mensagemGatewayPagamentoDTO,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
   pedidoFactoryMock,
@@ -72,7 +71,6 @@ describe('WebhookUseCase', () => {
     const result = await webhookUseCase.consumirMensagem(
       idPedidoMercadoPago,
       topicMercadoPago,
-      mensagemGatewayPagamentoDTO,
     );
 
     expect(apiPedidosServiceMock.atualizarStatusPedido).toHaveBeenCalledWith(
