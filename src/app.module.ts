@@ -1,14 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostgresConfigService } from './infrastructure/sql/database/postgres.config.service';
 
 import { AppController } from './presentation/rest/v1/controllers/app/app.controller';
 import { AppUseCase } from './application/use_cases/app/app.use_case';
 import { PedidoModule } from './modules/pedido.module';
 import { WebhookModule } from './modules/webhook.module';
-import { MongoDataServicesModule } from './infrastructure/mongo/mongo-data-services.module';
 
 @Module({
   imports: [

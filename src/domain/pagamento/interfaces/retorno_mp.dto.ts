@@ -1,4 +1,4 @@
-export class RetornoMPDTO {
+export interface RetornoMPDTO {
   id: string;
   topic: any;
 }
