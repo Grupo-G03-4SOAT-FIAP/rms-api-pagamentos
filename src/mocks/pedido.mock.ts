@@ -113,6 +113,8 @@ export const pedidoRepositoryMock = {
   buscarPedido: jest.fn(),
   listarPedidos: jest.fn(),
   listarPedidosRecebido: jest.fn(),
+  registrarQRCode: jest.fn(),
+  guardarMsgWebhook: jest.fn(),
 };
 
 // Mock jest da função do factory sql dto de pedido

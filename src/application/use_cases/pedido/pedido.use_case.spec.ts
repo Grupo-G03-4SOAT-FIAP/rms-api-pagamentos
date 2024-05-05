@@ -63,6 +63,8 @@ describe('PedidoUseCase', () => {
   it('deve criar um pedido com sucesso', async () => {
     pedidoFactoryMock.criarEntidadePedido.mockReturnValue(pedidoEntityMock);
     pedidoRepositoryMock.criarPedido.mockReturnValue(pedidoModelMock);
+    pedidoRepositoryMock.registrarQRCode(null);
+
     gatewayPagamentoServiceMock.criarPedido.mockReturnValue(null);
     pedidoDTOFactoryMock.criarPedidoDTO.mockReturnValue(pedidoDTOMock);
 
@@ -86,6 +88,8 @@ describe('PedidoUseCase', () => {
 
     pedidoRepositoryMock.buscarPedido.mockReturnValue(pedidoModelMock);
     pedidoRepositoryMock.editarStatusPedido.mockReturnValue(pedidoModelMock);
+    pedidoRepositoryMock.guardarMsgWebhook.mockReturnValue(null);
+
     pedidoDTOFactoryMock.criarPedidoDTO.mockReturnValue(pedidoDTOMock);
     gatewayPagamentoServiceMock.consultarPedido.mockReturnValue(
       pedidoGatewayPagamentoDTO,

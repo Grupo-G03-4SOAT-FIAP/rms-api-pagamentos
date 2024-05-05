@@ -1,5 +1,5 @@
 import { Pagamento } from 'src/domain/pagamento/entities/pagamento.entity';
-import { RetornoMP } from 'src/domain/pagamento/entities/retorno_mp.entity';
+import { RetornoMPDTO } from 'src/domain/pagamento/interfaces/retorno_mp.dto';
 
 export interface IPedidoRepository {
   registrarQRCode(
@@ -7,7 +7,7 @@ export interface IPedidoRepository {
     qrData: string,
     date: Date,
   ): Promise<Pagamento>;
-  guardarMsgWebhook(id: string, topic: string): Promise<RetornoMP>;
+  guardarMsgWebhook(id: string, topic: string): Promise<RetornoMPDTO>;
 }
 
 export const IPedidoRepository = Symbol('IPedidoRepository');

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Pagamento } from 'src/domain/pagamento/entities/pagamento.entity';
-import { RetornoMP } from 'src/domain/pagamento/entities/retorno_mp.entity';
+import { RetornoMPDTO } from 'src/domain/pagamento/interfaces/retorno_mp.dto';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IDataServices } from 'src/abstracts';
 
@@ -25,7 +25,7 @@ export class PedidoRepository implements IPedidoRepository {
     }
   }
 
-  async guardarMsgWebhook(id, topic: string): Promise<RetornoMP> {
+  async guardarMsgWebhook(id, topic: string): Promise<RetornoMPDTO> {
     try {
       const retornoMp = await this.dataServices.retorno_mp.create({
         id,
