@@ -1,18 +1,13 @@
-import { PedidoEntity } from '../entities/pedido.entity';
+import { Pagamento } from 'src/domain/pagamento/entities/pagamento.entity';
+import { RetornoMPDTO } from 'src/domain/pagamento/interfaces/retorno_mp.dto';
 
 export interface IPedidoRepository {
-  criarPedido(pedido: PedidoEntity): Promise<PedidoEntity>;
-  buscarPedido(pedidoId: string): Promise<PedidoEntity | null>;
-  editarStatusPedido(
-    pedidoId: string,
-    statusPedido: string,
-  ): Promise<PedidoEntity | null>;
-  editarStatusPagamento(
-    pedidoId: string,
-    statusPagamento: boolean,
-  ): Promise<PedidoEntity | null>;
-  listarPedidos(): Promise<PedidoEntity[] | []>;
-  listarPedidosRecebido(): Promise<PedidoEntity[] | []>;
+  registrarQRCode(
+    idPedido: string,
+    qrData: string,
+    date: Date,
+  ): Promise<Pagamento>;
+  guardarMsgWebhook(id: string, topic: string): Promise<RetornoMPDTO>;
 }
 
 export const IPedidoRepository = Symbol('IPedidoRepository');

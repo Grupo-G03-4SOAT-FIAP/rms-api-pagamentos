@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { MercadoPagoConfig, MerchantOrder } from 'mercadopago';
 import { DateTime } from 'luxon';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { PedidoGatewayPagamentoDTO } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
-import { PedidoModel } from 'src/infrastructure/sql/models/pedido.model';
 import { PedidoEntity } from 'src/domain/pedido/entities/pedido.entity';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
@@ -19,11 +16,7 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
   private _webhookURL: string;
   private _idempotencyKey: string;
 
-  constructor(
-    private configService: ConfigService,
-    @InjectRepository(PedidoModel)
-    private readonly pedidoRepository: Repository<PedidoModel>,
-  ) {
+  constructor(private configService: ConfigService) {
     this._accessToken = this.configService.get<string>(
       'ACCESS_TOKEN_MERCADOPAGO',
     );

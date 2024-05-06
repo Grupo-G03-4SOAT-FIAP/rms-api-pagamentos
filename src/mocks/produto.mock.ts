@@ -30,7 +30,6 @@ export const produtoEntityMock = new ProdutoEntity(
   'Produto X',
   categoriaEntityMock,
   5.0,
-  'http://',
   'Teste Produto X',
   '0a14aa4e-75e7-405f-8301-81f60646c93d',
 );
@@ -40,7 +39,6 @@ export const produtoEntityNotIdMock = new ProdutoEntity(
   'Produto X',
   categoriaEntityMock,
   5.0,
-  'http://',
   'Teste Produto X',
 );
 
@@ -49,7 +47,6 @@ export const produtoEntityNotDescricaoMock = new ProdutoEntity(
   'Produto X',
   categoriaEntityMock,
   5.0,
-  'http://',
 );
 
 // Mock para simular o DTO com os dados recebidos pelo usuario ao criar um produto
@@ -74,7 +71,6 @@ produtoDTOMock.id = produtoModelMock.id;
 produtoDTOMock.nome = produtoModelMock.nome;
 produtoDTOMock.descricao = produtoModelMock.descricao;
 produtoDTOMock.valorUnitario = produtoModelMock.valorUnitario;
-produtoDTOMock.imagemUrl = produtoModelMock.imagemUrl;
 produtoDTOMock.categoria = categoriaDTOMock;
 
 // Mock jest das funções do typeORM interagindo com a tabela produto
@@ -90,17 +86,6 @@ export const produtoTypeORMMock: jest.Mocked<Repository<ProdutoModel>> = {
   Repository<ProdutoModel>
 >;
 
-// Mock jest das funções do repository produto
-export const produtoRepositoryMock = {
-  criarProduto: jest.fn(),
-  editarProduto: jest.fn(),
-  excluirProduto: jest.fn(),
-  buscarProdutoPorId: jest.fn(),
-  buscarProdutoPorNome: jest.fn(),
-  listarProdutos: jest.fn(),
-  listarProdutosPorCategoria: jest.fn(),
-};
-
 // Mock jest da função do factory sql dto de produto
 export const produtoSQLDTOFactoryMock = {
   criarProdutoDTO: jest.fn(),
@@ -108,7 +93,6 @@ export const produtoSQLDTOFactoryMock = {
 
 // Mock jest das funções da factory que cria entidade produto
 export const produtoFactoryMock = {
-  criarEntidadeCategoria: jest.fn(),
   criarEntidadeProduto: jest.fn(),
 };
 

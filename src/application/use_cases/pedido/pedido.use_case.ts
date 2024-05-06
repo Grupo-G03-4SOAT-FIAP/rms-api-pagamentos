@@ -1,22 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { HTTPResponse } from 'src/application/common/HTTPResponse';
-import { ClienteEntity } from 'src/domain/cliente/entities/cliente.entity';
-import { IClienteRepository } from 'src/domain/cliente/interfaces/cliente.repository.port';
-import { PedidoEntity } from 'src/domain/pedido/entities/pedido.entity';
-import { PedidoNaoLocalizadoErro } from 'src/domain/pedido/exceptions/pedido.exception';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IPedidoUseCase } from 'src/domain/pedido/interfaces/pedido.use_case.port';
-import { CriaClienteDTO } from 'src/presentation/rest/v1/presenters/cliente/cliente.dto';
 import {
   MensagemMercadoPagoDTO,
   PedidoGatewayPagamentoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
 import {
-  AtualizaPedidoDTO,
   CriaPedidoDTO,
   PedidoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/pedido.dto';
@@ -26,160 +20,53 @@ export class PedidoUseCase implements IPedidoUseCase {
   constructor(
     @Inject(IPedidoRepository)
     private readonly pedidoRepository: IPedidoRepository,
-    @Inject(IClienteRepository)
-    private readonly clienteRepository: IClienteRepository,
     @Inject(IPedidoFactory)
     private readonly pedidoFactory: IPedidoFactory,
     @Inject(IGatewayPagamentoService)
     private readonly gatewayPagamentoService: IGatewayPagamentoService,
+    @Inject(IApiPedidosService)
+    private readonly apiPedidosService: IApiPedidosService,
     @Inject(IPedidoDTOFactory)
     private readonly pedidoDTOFactory: IPedidoDTOFactory,
-    private configService: ConfigService,
   ) {}
 
-  async listarPedidos(): Promise<[] | PedidoDTO[]> {
-    const listaPedidos = await this.pedidoRepository.listarPedidos();
-    const listaPedidosDTO =
-      this.pedidoDTOFactory.criarListaPedidoDTO(listaPedidos);
-    return listaPedidosDTO;
-  }
-  async listarPedidosRecebido(): Promise<[] | PedidoDTO[]> {
-    const listaPedidosRecebidos =
-      await this.pedidoRepository.listarPedidosRecebido();
-    const listaPedidosDTO = this.pedidoDTOFactory.criarListaPedidoDTO(
-      listaPedidosRecebidos,
-    );
-    return listaPedidosDTO;
-  }
-
-  async buscarPedido(idPedido: string): Promise<PedidoDTO> {
-    const pedidoEncontrado = await this.validarPedidoPorId(idPedido);
-    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedidoEncontrado);
-    return pedidoDTO;
-  }
-
   async criarPedido(
-    criaClienteDTO: CriaClienteDTO,
     criaPedidoDTO: CriaPedidoDTO,
   ): Promise<HTTPResponse<PedidoDTO>> {
     const pedido = await this.pedidoFactory.criarEntidadePedido(criaPedidoDTO);
-    const cliente =
-      await this.pedidoFactory.criarEntidadeCliente(criaClienteDTO);
-    const clienteCriadoOuAtualizado =
-      await this.criarOuAtualizarCliente(cliente);
-    pedido.cliente = clienteCriadoOuAtualizado;
-    pedido.clientePedido = this.copiarDadosCliente(clienteCriadoOuAtualizado);
-    const pedidoCriado = await this.pedidoRepository.criarPedido(pedido);
-    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedidoCriado);
-    if (this.mercadoPagoIsEnabled()) {
-      const qrData =
-        await this.gatewayPagamentoService.criarPedido(pedidoCriado);
-      pedidoDTO.qrCode = qrData;
-    }
+    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedido);
+    const qrData = await this.gatewayPagamentoService.criarPedido(pedido);
+    pedidoDTO.qrCode = qrData;
+
+    // TODO: Gravar no MongoDB o pedido.id e o respectivo QR Code gerado pelo Mercado Pago
+    await this.pedidoRepository.registrarQRCode(pedido.id, qrData, new Date());
+
     return {
       mensagem: 'Pedido criado com sucesso',
       body: pedidoDTO,
     };
   }
 
-  private copiarDadosCliente(
-    clienteOrigem: ClienteEntity,
-  ): ClienteEntity | null {
-    const clienteCopia = new ClienteEntity(
-      clienteOrigem.nome,
-      clienteOrigem.email,
-      clienteOrigem.cpf,
-    );
-    return clienteCopia;
-  }
-
-  private async criarOuAtualizarCliente(
-    cliente: ClienteEntity,
-  ): Promise<ClienteEntity | null> {
-    const clienteAntigoEncontrado =
-      await this.clienteRepository.buscarClientePorCPF(cliente.cpf);
-    let clientePedido: ClienteEntity | null;
-    if (clienteAntigoEncontrado) {
-      if (
-        cliente.cpf !== clienteAntigoEncontrado.cpf ||
-        cliente.email !== clienteAntigoEncontrado.email ||
-        cliente.nome !== clienteAntigoEncontrado.nome
-      ) {
-        clientePedido = await this.clienteRepository.editarCliente(
-          clienteAntigoEncontrado.id,
-          cliente,
-        );
-      } else {
-        clientePedido = clienteAntigoEncontrado;
-      }
-    } else {
-      clientePedido = await this.clienteRepository.criarCliente(cliente);
-    }
-    return clientePedido;
-  }
-
-  async editarPedido(
-    idPedido: string,
-    atualizaPedidoDTO: AtualizaPedidoDTO,
-  ): Promise<HTTPResponse<PedidoDTO>> {
-    await this.validarPedidoPorId(idPedido);
-    const pedidoEditado = await this.pedidoRepository.editarStatusPedido(
-      idPedido,
-      atualizaPedidoDTO.statusPedido,
-    );
-    const pedidoDTO = this.pedidoDTOFactory.criarPedidoDTO(pedidoEditado);
-    return {
-      mensagem: 'Pedido atualizado com sucesso',
-      body: pedidoDTO,
-    };
-  }
-
-  async webhookPagamento(
+  async consumirMensagem(
     id: string,
     topic: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
+    // TODO: Gravar no MongoDB os parâmentros id, topic e mensagem que recebemos do Mercado Pago, para auditoria
+    await this.pedidoRepository.guardarMsgWebhook(id, topic);
+
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =
         await this.gatewayPagamentoService.consultarPedido(id);
       const idInternoPedido = pedidoGatewayPag.external_reference;
       if (this.verificarPagamento(pedidoGatewayPag)) {
-        const buscaPedido =
-          await this.pedidoRepository.buscarPedido(idInternoPedido);
-        if (!buscaPedido) {
-          throw new PedidoNaoLocalizadoErro('Pedido não localizado');
-        }
-        await this.pedidoRepository.editarStatusPagamento(
-          idInternoPedido,
-          true,
-        );
-        await this.pedidoRepository.editarStatusPedido(
-          idInternoPedido,
-          'em preparacao',
-        );
+        this.apiPedidosService.atualizarStatusPedido(idInternoPedido);
       }
       return {
         mensagem: 'Mensagem consumida com sucesso',
       };
     }
-  }
-
-  private async validarPedidoPorId(
-    idPedido: string,
-  ): Promise<PedidoEntity | null> {
-    const pedidoEncontrado = await this.pedidoRepository.buscarPedido(idPedido);
-    if (!pedidoEncontrado) {
-      throw new PedidoNaoLocalizadoErro('Pedido informado não existe');
-    }
-    return pedidoEncontrado;
-  }
-
-  private mercadoPagoIsEnabled(): boolean {
-    return (
-      this.configService.get<string>('ENABLE_MERCADOPAGO')?.toLowerCase() ===
-      'true'
-    );
   }
 
   private verificarPagamento(

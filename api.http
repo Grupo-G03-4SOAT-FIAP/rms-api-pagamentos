@@ -3,130 +3,37 @@ GET http://localhost:3000/
 
 ##################################################
 
-### Listar clientes
-GET http://localhost:3000/cliente
-
-### Buscar cliente pelo CPF (Login)
-GET http://localhost:3000/cliente/cpf/44470640735
-
-### Criar cliente (Cadastro)
-POST http://localhost:3000/cliente
-Content-Type: application/json
-
-{
-    "cpf": "44470640735",
-    "nome": "Fulano da Silva Santos",
-    "email": "fulano@gmail.com"
-}
-
-### Editar cliente
-PUT http://localhost:3000/cliente/6a9d3e75-06e2-4066-aa4a-9c2a5f44ba3f
-Content-Type: application/json
-
-{
-    "cpf": "44470640735",
-    "nome": "Fulano da Silva Santos",
-    "email": "fulano.1998@gmail.com"
-}
-
-### Remover cliente
-DELETE http://localhost:3000/cliente/96a9d3e75-06e2-4066-aa4a-9c2a5f44ba3f
-
-##################################################
-
-### Listar categorias
-GET http://localhost:3000/categoria
-
-### Detalhes de uma categoria
-GET http://localhost:3000/categoria/9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4
-
-### Criar categoria
-POST http://localhost:3000/categoria
-Content-Type: application/json
-
-{
-    "nome": "Bebidas",
-    "descricao": "Refrigerantes, sucos e bebidas alcoolicas"
-}
-
-### Editar categoria
-PUT http://localhost:3000/categoria/9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4
-Content-Type: application/json
-
-{
-    "descricao": "Refrigerantes, sucos"
-}
-
-### Remover categoria
-DELETE http://localhost:3000/categoria/9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4
-
-##################################################
-
-### Listar produtos
-GET http://localhost:3000/produto
-
-### Listar produtos por categoria
-GET http://localhost:3000/produto/categoria/9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4
-
-### Detalhes de um produto
-GET http://localhost:3000/produto/6a1f1007-b48a-458b-8009-9f2701eae8f3
-
-### Criar produto
-POST http://localhost:3000/produto
-Content-Type: application/json
-
-{
-    "nome": "X-Tudo",
-    "valorUnitario": 29.9,
-    "descricao": "Ingredientes: 1 hambúrguer, 50 g de bacon picados, 1 ovo, 2 fatias de presunto, 2 fatias de mussarela (cheddar), 1 folha de alface, 1 rodela de tomate, 1 pão de hambúrguer, 1 colher de maionese, Catchup a gosto (opcional)",
-    "imagemUrl": "https://conteudo.imguol.com.br/c/entretenimento/17/2023/05/24/x-tudo-brasileiro-tem-variedade-de-ingredientes-de-acordo-com-preferencias-regionais-aqui-versao-com-carne-bovina-tomato-salsicha-presunto-bacon-e-queijo-no-pao-1684938396547_v2_1x1.jpg",
-    "categoriaId": "9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4"
-}
-
-### Editar produto
-PUT http://localhost:3000/produto/6a1f1007-b48a-458b-8009-9f2701eae8f3
-Content-Type: application/json
-
-{
-    "nome": "X-Salada",
-    "valorUnitario": 16,
-    "descricao": "Ingredientes: 1 hambúrguer, 50 g de bacon picados, 1 ovo, 2 fatias de presunto, 2 fatias de mussarela (cheddar), 1 folha de alface, 1 rodela de tomate, 1 pão de hambúrguer, 1 colher de maionese, Catchup a gosto (opcional)",
-    "imagemUrl": "https://anamariabraga.globo.com/wp-content/uploads/2016/11/x-salada-classico.jpg",
-    "categoriaId": "9fbc614b-9b44-4d35-8ec7-36e55ba7f0f4"
-}
-
-### Remover produto
-DELETE http://localhost:3000/produto/6a1f1007-b48a-458b-8009-9f2701eae8f3
-
-##################################################
-
-### Fila de pedidos (com o status "Recebido")
-GET http://localhost:3000/pedido/fila
-
-### Listar pedidos (com o status "Pronto" ou "Em preparação")
-GET http://localhost:3000/pedido
-
-### Detalhes de um pedido
-GET http://localhost:3000/pedido/ffb5ea00-5e1c-40d1-b9b9-bce8b4baf3dc
-
 ### Criar pedido
 POST http://localhost:3000/pedido
 Content-Type: application/json
 
 {
-    //"cpfCliente": "44470640735", // Campo opcional
+    "id": "8a08e625-6747-475d-a1f3-ea059ead745d",
+    "numeroPedido": "638692",
     "itensPedido": [
         {
-            "produto": "3ecd5148-c71f-412b-9a3a-0c1896375bf2",
-            "quantidade": 1
+            "quantidade": 1,
+            "produto": {
+                "id": "ceb54f86-1f86-4138-a47a-03d8dc9fcdca",
+                "nome": "X-tudo",
+                "descricao": "Ingredientes: 1 Hambúrguer, 50 G De Bacon Picados, 1 Ovo, 2 Fatias De Presunto, 2 Fatias De Mussarela (cheddar), 1 Folha De Alface, 1 Rodela De Tomate, 1 Pão De Hambúrguer, 1 Colher De Maionese, Catchup A Gosto (opcional)",
+                "valorUnitario": 29.9,
+                "categoria": {
+                    "id": "46891fe2-3a09-4cd1-8864-dfb99c2aa79a",
+                    "nome": "Lanches",
+                    "descricao": "Lanches Para Todos Os Gostos!"
+                }
+            }
         }
     ]
 }
 
-### Editar pedido (atualizar status)
-PUT http://localhost:3000/pedido/10cc2240-cc07-4a02-bb75-e292faef49e3
+
+### Webhook
+POST http://localhost:3000/webhook?id=15140831325&topic=merchant_order
 Content-Type: application/json
 
 {
-    "statusPedido": "em preparacao"
+    "resource": "https://api.mercadolibre.com/merchant_orders/15140831325",
+    "topic": "merchant_order"
 }

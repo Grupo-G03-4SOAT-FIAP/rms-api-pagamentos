@@ -8,5 +8,4 @@ metadata:
 data:
   DB_NAME: "rms"
   DB_SSL: "false"
-  ENABLE_MERCADOPAGO: "true"
   IDEMPOTENCY_KEY_MERCADOPAGO: "a005986e-f97c-4274-91cf-b32d2672824f"

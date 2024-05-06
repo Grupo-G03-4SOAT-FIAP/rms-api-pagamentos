@@ -1,4 +1,3 @@
-import { ClienteEntity } from 'src/domain/cliente/entities/cliente.entity';
 import { PedidoEntity } from '../entities/pedido.entity';
 import { StatusPedido } from '../enums/pedido.enum';
 import { ItemPedidoEntity } from '../entities/item_pedido.entity';
@@ -10,7 +9,6 @@ export interface IPedidoEntityFactory {
     statusPedido: StatusPedido,
     numeroPedido: string,
     pago: boolean,
-    cliente?: ClienteEntity,
     id?: string,
     criadoEm?: string,
     atualizadoEm?: string,

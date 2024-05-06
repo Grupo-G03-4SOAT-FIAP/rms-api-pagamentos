@@ -1,5 +1,4 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, forwardRef } from '@nestjs/common';
 import { PedidoUseCase } from '../application/use_cases/pedido/pedido.use_case';
 import { PedidoDTOFactory } from '../domain/pedido/factories/pedido.dto.factory';
 import { PedidoFactory } from '../domain/pedido/factories/pedido.factory';
@@ -7,30 +6,26 @@ import { IPedidoDTOFactory } from '../domain/pedido/interfaces/pedido.dto.factor
 import { IPedidoFactory } from '../domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from '../domain/pedido/interfaces/pedido.repository.port';
 import { IPedidoUseCase } from '../domain/pedido/interfaces/pedido.use_case.port';
-import { PedidoModel } from '../infrastructure/sql/models/pedido.model';
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { PedidoController } from '../presentation/rest/v1/controllers/pedido/pedido.controller';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
 import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
 import { SQLDTOFactory } from '../infrastructure/sql/factories/sql.dto.factory';
-import { ItemPedidoModel } from '../infrastructure/sql/models/item_pedido.model';
-import { ProdutoModule } from './produto.module';
-import { ClienteModule } from './client.module';
-import { PedidoService } from '../domain/pedido/services/pedido.service';
-import { AuthenticationGuard } from '@nestjs-cognito/auth';
-import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido.model';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
+import { ApiPedidosService } from 'src/infrastructure/services/api_pedidos/apipedidos.service';
+import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
+import { IProdutoDTOFactory } from 'src/domain/produto/interfaces/produto.dto.factory.port';
+import { ProdutoFactory } from 'src/domain/produto/factories/produto.factory';
+import { IProdutoFactory } from 'src/domain/produto/interfaces/produto.factory.port';
+import { CategoriaDTOFactory } from 'src/domain/categoria/factories/categoria.dto.factory';
+import { ICategoriaDTOFactory } from 'src/domain/categoria/interfaces/categoria.dto.factory.port';
+import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
+import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
+import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
 
 @Module({
-  imports: [
-    ProdutoModule,
-    ClienteModule,
-    TypeOrmModule.forFeature([
-      PedidoModel,
-      ItemPedidoModel,
-      ClientePedidoModel,
-    ]),
-  ],
   controllers: [PedidoController],
+  imports: [forwardRef(() => MongoDataServicesModule)],
   providers: [
     PedidoUseCase,
     {
@@ -52,14 +47,37 @@ import { ClientePedidoModel } from 'src/infrastructure/sql/models/cliente_pedido
       provide: IPedidoFactory,
       useClass: PedidoFactory,
     },
+    ProdutoFactory,
+    {
+      provide: IProdutoFactory,
+      useClass: ProdutoFactory,
+    },
+    CategoriaFactory,
+    {
+      provide: ICategoriaFactory,
+      useClass: CategoriaFactory,
+    },
     GatewayMercadoPagoService,
     {
       provide: IGatewayPagamentoService,
       useClass: GatewayMercadoPagoService,
     },
+    ApiPedidosService,
+    {
+      provide: IApiPedidosService,
+      useClass: ApiPedidosService,
+    },
+    ProdutoDTOFactory,
+    {
+      provide: IProdutoDTOFactory,
+      useClass: ProdutoDTOFactory,
+    },
+    CategoriaDTOFactory,
+    {
+      provide: ICategoriaDTOFactory,
+      useClass: CategoriaDTOFactory,
+    },
     SQLDTOFactory,
-    PedidoService,
-    AuthenticationGuard,
   ],
   exports: [],
 })

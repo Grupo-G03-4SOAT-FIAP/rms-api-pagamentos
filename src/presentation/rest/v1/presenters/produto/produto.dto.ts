@@ -95,9 +95,6 @@ export class ProdutoDTO {
   @ApiProperty({ description: 'Valor unitário do produto' })
   valorUnitario: number;
 
-  @ApiProperty({ description: 'URL da imagem do produto' })
-  imagemUrl: string;
-
   @ApiProperty({ description: 'Categoria do produto', type: CategoriaDTO })
   categoria: CategoriaDTO;
 }
