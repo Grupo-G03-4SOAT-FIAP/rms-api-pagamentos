@@ -22,7 +22,7 @@ services:
       IDEMPOTENCY_KEY_MERCADOPAGO: ${IDEMPOTENCY_KEY_MERCADOPAGO:-a005986e-f97c-4274-91cf-b32d2672824f}
     restart: always
     networks:
-      - default
+      - rms
     depends_on:
       - db-pagamentos
   
@@ -41,6 +41,8 @@ services:
           memory: 1024M
         reservations:
           memory: 1024M
+    networks:
+      - rms
 
   mongo-express:
     container_name: mongo-express
@@ -61,7 +63,10 @@ services:
           memory: 1024M
         reservations:
           memory: 1024M
+    networks:
+      - rms
           
 networks:
-  default:
+  rms:
+    name: rms_network
     driver: bridge
