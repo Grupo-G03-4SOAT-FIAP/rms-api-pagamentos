@@ -35,9 +35,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - '3003:3003'
     expose:
-      - 3000
+      - 3003
     env_file:
       - .env
     environment:
