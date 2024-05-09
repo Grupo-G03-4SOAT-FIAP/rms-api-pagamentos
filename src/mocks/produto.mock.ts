@@ -1,4 +1,3 @@
-import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import {
   categoriaDTOMock,
@@ -72,19 +71,6 @@ produtoDTOMock.nome = produtoModelMock.nome;
 produtoDTOMock.descricao = produtoModelMock.descricao;
 produtoDTOMock.valorUnitario = produtoModelMock.valorUnitario;
 produtoDTOMock.categoria = categoriaDTOMock;
-
-// Mock jest das funções do typeORM interagindo com a tabela produto
-export const produtoTypeORMMock: jest.Mocked<Repository<ProdutoModel>> = {
-  create: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findOne: jest.fn(),
-  find: jest.fn(),
-  restore: jest.fn(),
-} as Partial<jest.Mocked<Repository<ProdutoModel>>> as jest.Mocked<
-  Repository<ProdutoModel>
->;
 
 // Mock jest da função do factory sql dto de produto
 export const produtoSQLDTOFactoryMock = {

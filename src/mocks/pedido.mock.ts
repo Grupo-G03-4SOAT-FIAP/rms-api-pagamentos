@@ -1,4 +1,3 @@
-import { Repository } from 'typeorm';
 import {
   ItemPedidoDTOMock,
   itemPedidoDTOMock,
@@ -93,17 +92,6 @@ const itemDTO = new PaymentDTO();
 itemDTO.status = 'approved';
 pedidoGatewayPagamentoDTO.payments = [itemDTO];
 pedidoGatewayPagamentoDTO.order_status = 'paid';
-
-// Mock jest das funções do typeORM interagindo com a tabela pedido
-export const pedidoTypeORMMock: jest.Mocked<Repository<PedidoModel>> = {
-  create: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  findOne: jest.fn(),
-  find: jest.fn(),
-} as Partial<jest.Mocked<Repository<PedidoModel>>> as jest.Mocked<
-  Repository<PedidoModel>
->;
 
 // Mock jest das funções do repository pedido
 export const pedidoRepositoryMock = {

@@ -7,7 +7,6 @@ import { IPedidoRepository } from '../domain/pedido/interfaces/pedido.repository
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
 import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
-import { SQLDTOFactory } from '../infrastructure/sql/factories/sql.dto.factory';
 import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { ApiPedidosService } from 'src/infrastructure/services/api_pedidos/apipedidos.service';
 import { WebhookController } from 'src/presentation/rest/v1/controllers/webhook/webhook.controller';
@@ -77,7 +76,6 @@ import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-ser
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
     },
-    SQLDTOFactory,
   ],
   exports: [],
 })
