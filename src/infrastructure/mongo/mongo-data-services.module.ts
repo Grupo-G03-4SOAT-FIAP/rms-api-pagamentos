@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService], // Injete o ConfigService
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URL'), // Use o ConfigService para obter a variável de ambiente
-        dbName: 'pagamento',
+        dbName: 'pagamentos',
       }),
     }),
     // MongooseModule.forRoot('mongodb://admin:pass@localhost:27017', {
