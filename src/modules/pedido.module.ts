@@ -10,7 +10,6 @@ import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedi
 import { PedidoController } from '../presentation/rest/v1/controllers/pedido/pedido.controller';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
 import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
-import { SQLDTOFactory } from '../infrastructure/sql/factories/sql.dto.factory';
 import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { ApiPedidosService } from 'src/infrastructure/services/api_pedidos/apipedidos.service';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
@@ -77,7 +76,6 @@ import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-ser
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
     },
-    SQLDTOFactory,
   ],
   exports: [],
 })

@@ -4,7 +4,6 @@ import {
   produtoModelMock,
 } from './produto.mock';
 import { pedidoModelMock } from './pedido.mock';
-import { Repository } from 'typeorm';
 import { ItemPedidoModel } from 'src/infrastructure/sql/models/item_pedido.model';
 import { ItemPedidoEntity } from 'src/domain/pedido/entities/item_pedido.entity';
 import { ItemPedidoDTO } from 'src/presentation/rest/v1/presenters/pedido/item_pedido.dto';
@@ -38,11 +37,3 @@ ItemPedidoDTOMock.quantidade = 2;
 export const itemPedidoDTOMock = new ItemPedidoDTO();
 itemPedidoDTOMock.produto = produtoDTOMock;
 itemPedidoDTOMock.quantidade = itemPedidoModelMock.quantidade;
-
-// Mock jest das funções do typeORM interagindo com a tabela item pedido
-export const itemPedidoTypeORMMock: jest.Mocked<Repository<ItemPedidoModel>> = {
-  create: jest.fn(),
-  save: jest.fn(),
-} as Partial<jest.Mocked<Repository<ItemPedidoModel>>> as jest.Mocked<
-  Repository<ItemPedidoModel>
->;

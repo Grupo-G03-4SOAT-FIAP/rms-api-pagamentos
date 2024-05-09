@@ -1,4 +1,3 @@
-import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { produtoModelMock } from './produto.mock';
 import { CategoriaEntity } from 'src/domain/categoria/entities/categoria.entity';
@@ -50,19 +49,6 @@ export const categoriaDTOMock = new CategoriaDTO();
 categoriaDTOMock.id = categoriaEntityMock.id;
 categoriaDTOMock.nome = categoriaEntityMock.nome;
 categoriaDTOMock.descricao = categoriaEntityMock.descricao;
-
-// Mock jest das funções do typeORM interagindo com a tabela categoria
-export const categoriaTypeORMMock: jest.Mocked<Repository<CategoriaModel>> = {
-  create: jest.fn(),
-  save: jest.fn(),
-  update: jest.fn(),
-  delete: jest.fn(),
-  findOne: jest.fn(),
-  find: jest.fn(),
-  restore: jest.fn(),
-} as Partial<jest.Mocked<Repository<CategoriaModel>>> as jest.Mocked<
-  Repository<CategoriaModel>
->;
 
 // Mock jest das funções do repository categoria
 export const categoriaRepositoryMock = {
