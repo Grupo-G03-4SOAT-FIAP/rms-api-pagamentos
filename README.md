@@ -9,18 +9,6 @@
 
 Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvolvido pelo grupo *"BOPE"* G03 da turma 4SOAT para o Tech Challenge da [Pós Tech em Software Architecture da FIAP](https://postech.fiap.com.br/curso/software-architecture/).
 
-### O PROBLEMA
-
-*Há uma lanchonete de bairro que está expandindo devido seu grande sucesso. Porém, com a expansão e sem um sistema de controle de pedidos, o atendimento aos clientes pode ser caótico e confuso. Por exemplo, imagine que um cliente faça um pedido complexo, como um hambúrguer personalizado com ingredientes específicos, acompanhado de batatas fritas e uma bebida. O atendente pode anotar o pedido em um papel e entregá-lo à cozinha, mas não há garantia de que o pedido será preparado corretamente.*
-
-*Sem um sistema de controle de pedidos, pode haver confusão entre os atendentes e a cozinha, resultando em atrasos na preparação e entrega dos pedidos. Os pedidos podem ser perdidos, mal interpretados ou esquecidos, levando à insatisfação dos clientes e a perda de negócios.*
-
-*Em resumo, um sistema de controle de pedidos é essencial para garantir que a lanchonete possa atender os clientes de maneira eficiente, gerenciando seus pedidos e estoques de forma adequada. Sem ele, expandir a lanchonete pode acabar não dando certo, resultando em clientes insatisfeitos e impactando os negócios de forma negativa.*
-
-*Para solucionar o problema, a lanchonete irá investir em um sistema de autoatendimento de fast food, que é composto por uma série de dispositivos e interfaces que permitem aos clientes selecionar e fazer pedidos sem precisar interagir com um atendente.*
-
-*— Fonte: [FIAP](https://www.fiap.com.br/)*
-
 #### Stack
 
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
@@ -83,11 +71,7 @@ Para mais informações visite a página [Boas práticas para secrets do Kuberne
 
 </details>
 
-<details>
-
-<summary>Como testar o pagamento de pedidos através do QR Code do Mercado Pago?</summary>
-
-## Instruções para testar o pagamento de pedidos através do QR Code do Mercado Pago
+## Testar o pagamento de pedidos através do QR Code do Mercado Pago
 
 Para testar o pagamento de pedidos usando o QR Code do Mercado Pago você vai precisar criar uma Aplicação no [portal do Mercado Pago Developers](https://www.mercadopago.com.br/developers/pt).
 
@@ -99,26 +83,27 @@ Para testar o pagamento de pedidos usando o QR Code do Mercado Pago você vai pr
 6. Usando o [Postman](https://www.postman.com/), cadastre uma **Loja** conforme instruções na página [Criar loja](https://www.mercadopago.com.br/developers/pt/reference/stores/_users_user_id_stores/post). Anote o `id` da Loja que você cadastrou;
 7. Usando o [Postman](https://www.postman.com/), cadastre um **Caixa** conforme instruções na página [Criar caixa](https://www.mercadopago.com.br/developers/pt/reference/pos/_pos/post). Anote o `external_id` do Caixa que você cadastrou;
 8. Preencha as variáveis de ambiente no arquivo `.env` com o `User ID` e `Access Token` da aplicação de testes e com o `id` da Loja e o `external_id` do Caixa que você de cadastrou anteriormente através da API do Mercado Pago;
-9. Ative a feature flag `ENABLE_MERCADOPAGO=true` no arquivo `.env`
-10. Execute a aplicação.
-
-</details>
+9. Execute a aplicação.
 
 ## Banco de Dados
 
-Você pode conectar-se a instância de banco de dados PostgreSQL usando o [pgAdmin](https://www.pgadmin.org/download/), o terminal através do [psql](https://www.postgresql.org/download/), ou qualquer outra IDE ou ferramenta compatível.
+Você pode conectar-se a instância de banco de dados MongoDB usando o [MongoDB Compass](https://www.mongodb.com/products/tools/compass), o terminal através do [MongoDB Shell](https://www.mongodb.com/docs/v4.4/mongo/#download-the-mongo-shell), ou qualquer outra IDE ou ferramenta compatível.
 
 <details>
 
-<summary>Quais são os parâmetros da conexão e credenciais para acesso ao banco de dados PostgreSQL?</summary>
+<summary>Quais são os parâmetros da conexão e credenciais para acesso ao banco de dados MongoDB?</summary>
 
 <br>
 
 > Host: localhost\
-> Porta: 5432 (padrão)\
-> Usuário: pguser\
-> Senha: pgpwd\
-> DB name: rms
+> Porta: 27017 (padrão)\
+> Usuário: admin\
+> Senha: pass\
+> DB name: pagamentos
+
+```
+mongodb://admin:pass@db-pagamentos:27017/
+```
 
 </details>
 
@@ -130,17 +115,7 @@ A documentação do projeto está disponível no [GitHub Wiki](https://github.co
 
 Architectural Pattern: [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) + [Screaming Architecture](https://blog.cleancoder.com/uncle-bob/2011/09/30/Screaming-Architecture.html)
 
-![uml-clean-arch drawio](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-monolito/assets/5115895/c19b37cb-5d1a-4328-8611-f9321a95e068)
-*Clique na imagem para ampliar.*
-
-## Diagrama de arquitetura cloud
-
-Cloud provider: AWS
-
-![Diagrama de arquitetura cloud drawio](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-monolito/assets/5115895/7cf5b858-5c7e-47d6-9def-2cda7e470134)
-*Clique na imagem para ampliar.*
-
-![registry_and_authorizer_dark](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-monolito/assets/5115895/51c34341-099e-4395-a2a9-acdb62cc6c71)
+![image](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pagamentos/assets/5115895/76f1c7d0-167b-4237-a8f8-8d57318df965)
 
 ## Como contribuir
 
