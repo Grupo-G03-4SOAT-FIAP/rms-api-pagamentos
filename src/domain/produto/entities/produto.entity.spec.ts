@@ -10,10 +10,10 @@ describe('ProdutoEntity', () => {
 
   beforeEach(() => {
     // Defina as variáveis antes de cada teste
-    nome = 'produto x';
+    nome = 'Produto X';
     categoria = categoriaEntityMock;
     valorUnitario = 5.0;
-    descricao = 'teste produto x';
+    descricao = 'Teste Produto X';
   });
 
   it('deve criar uma instância de ProdutoEntity', () => {
