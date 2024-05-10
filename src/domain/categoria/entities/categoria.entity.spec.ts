@@ -7,8 +7,8 @@ describe('CategoriaEntity', () => {
 
   beforeEach(() => {
     // Defina as variáveis antes de cada teste
-    nome = 'lanche';
-    descricao = 'lanche x tudo';
+    nome = 'Lanche';
+    descricao = 'Lanche X Tudo';
     id = '0a14aa4e-75e7-405f-8301-81f60646c93d';
   });
 
