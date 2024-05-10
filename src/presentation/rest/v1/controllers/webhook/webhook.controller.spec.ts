@@ -50,7 +50,7 @@ describe('WebhookController', () => {
       new NotFoundException('Pedido não encontrado'),
     );
 
-    await expect(controller.consumirMensagem(id, topic)).rejects.toThrowError(
+    await expect(controller.consumirMensagem(id, topic)).rejects.toThrow(
       NotFoundException,
     );
   });

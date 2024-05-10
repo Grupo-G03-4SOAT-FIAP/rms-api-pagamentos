@@ -38,7 +38,6 @@ export class PedidoUseCase implements IPedidoUseCase {
     const qrData = await this.gatewayPagamentoService.criarPedido(pedido);
     pedidoDTO.qrCode = qrData;
 
-    // TODO: Gravar no MongoDB o pedido.id e o respectivo QR Code gerado pelo Mercado Pago
     await this.pedidoRepository.registrarQRCode(pedido.id, qrData, new Date());
 
     return {
@@ -53,7 +52,6 @@ export class PedidoUseCase implements IPedidoUseCase {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
-    // TODO: Gravar no MongoDB os parâmentros id, topic e mensagem que recebemos do Mercado Pago, para auditoria
     await this.pedidoRepository.guardarMsgWebhook(id, topic);
 
     if (id && topic === 'merchant_order') {

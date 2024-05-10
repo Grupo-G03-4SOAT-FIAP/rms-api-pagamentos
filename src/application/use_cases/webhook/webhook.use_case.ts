@@ -28,7 +28,6 @@ export class WebhookUseCase implements IWebhookUseCase {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     //mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
-    // TODO: Gravar no MongoDB os parâmentros id, topic e mensagem que recebemos do Mercado Pago, para auditoria
     await this.pedidoRepository.guardarMsgWebhook(id, topic);
 
     if (id && topic === 'merchant_order') {

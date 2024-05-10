@@ -3,8 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from './mongo-generic-repository';
 
-import { Pagamento } from './model/pagamento.entity'; //core dto domain
-import { PagamentoDocument } from './model/pagamento.entity'; //model entity
+import { Pagamento, PagamentoDocument } from './model/pagamento.entity';
 import { IDataServices } from 'src/abstracts';
 import { RetornoMP, RetornoMPDocument } from './model/retorno_mp.entity';
 
