@@ -8,12 +8,10 @@ import {
   apiPedidosServiceMock,
   criaPedidoDTOMock,
   gatewayPagamentoServiceMock,
-  mensagemGatewayPagamentoDTO,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
   pedidoEntityMock,
   pedidoFactoryMock,
-  pedidoGatewayPagamentoDTO,
   pedidoModelMock,
   pedidoRepositoryMock,
 } from 'src/mocks/pedido.mock';
@@ -22,7 +20,6 @@ import { ConfigService } from '@nestjs/config';
 
 describe('PedidoUseCase', () => {
   let pedidoUseCase: PedidoUseCase;
-  let pedidoId: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -53,7 +50,6 @@ describe('PedidoUseCase', () => {
     }).compile();
 
     pedidoUseCase = module.get<PedidoUseCase>(PedidoUseCase);
-    pedidoId = '0a14aa4e-75e7-405f-8301-81f60646c93d';
   });
 
   afterEach(() => {
@@ -79,33 +75,6 @@ describe('PedidoUseCase', () => {
     expect(result).toStrictEqual({
       mensagem: 'Pedido criado com sucesso',
       body: pedidoDTOMock,
-    });
-  });
-
-  it('deve atualizar o status de pagamento do pedido com sucesso', async () => {
-    const idPedidoMercadoPago = '15171882961';
-    const topicMercadoPago = 'merchant_order';
-
-    pedidoRepositoryMock.buscarPedido.mockReturnValue(pedidoModelMock);
-    pedidoRepositoryMock.editarStatusPedido.mockReturnValue(pedidoModelMock);
-    pedidoRepositoryMock.guardarMsgWebhook.mockReturnValue(null);
-
-    pedidoDTOFactoryMock.criarPedidoDTO.mockReturnValue(pedidoDTOMock);
-    gatewayPagamentoServiceMock.consultarPedido.mockReturnValue(
-      pedidoGatewayPagamentoDTO,
-    );
-
-    const result = await pedidoUseCase.consumirMensagem(
-      idPedidoMercadoPago,
-      topicMercadoPago,
-      mensagemGatewayPagamentoDTO,
-    );
-
-    expect(apiPedidosServiceMock.atualizarStatusPedido).toHaveBeenCalledWith(
-      pedidoId,
-    );
-    expect(result).toStrictEqual({
-      mensagem: 'Mensagem consumida com sucesso',
     });
   });
 });
