@@ -15,6 +15,7 @@ services:
       - .env
     environment:
       MONGO_URL: ${MONGO_URL:-}
+      URL_API_PEDIDOS: http://api-pedidos:3002/pedido
       ACCESS_TOKEN_MERCADOPAGO: ${ACCESS_TOKEN_MERCADOPAGO:-}
       USER_ID_MERCADOPAGO: ${USER_ID_MERCADOPAGO:-}
       EXTERNAL_POS_ID_MERCADOPAGO: ${EXTERNAL_POS_ID_MERCADOPAGO:-}
