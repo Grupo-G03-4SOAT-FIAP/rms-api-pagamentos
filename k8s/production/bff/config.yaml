@@ -6,6 +6,7 @@ metadata:
   labels:
     app: rms-api-pagamentos
 data:
-  DB_NAME: "rms"
+  DB_NAME: "pagamentos"
   DB_SSL: "false"
+  URL_API_PEDIDOS: ""
   IDEMPOTENCY_KEY_MERCADOPAGO: "a005986e-f97c-4274-91cf-b32d2672824f"

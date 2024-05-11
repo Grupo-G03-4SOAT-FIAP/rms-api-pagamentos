@@ -6,7 +6,7 @@ metadata:
   labels:
     app: rms-api-pagamentos
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: rms-api-pagamentos
@@ -23,10 +23,10 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: aws-secrets
+              secretProviderClass: aws-secrets-api-pagamentos
       containers:
         - name: rms-api-pagamentos
-          image: 900534935988.dkr.ecr.us-east-1.amazonaws.com/rms:latest
+          image: 900534935988.dkr.ecr.us-east-1.amazonaws.com/rms-api-pagamentos:latest
           envFrom:
             - configMapRef:
                 name: rms-api-pagamentos-config
@@ -35,26 +35,11 @@ spec:
               mountPath: "/mnt/secrets-store"
               readOnly: true
           env:
-            - name: DB_HOST
+            - name: MONGO_URL
               valueFrom:
                 secretKeyRef:
-                  name: db-bff-secret
+                  name: db-pagamentos-secret
                   key: host
-            - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: db-bff-secret
-                  key: port
-            - name: DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-bff-secret
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-bff-secret
-                  key: password
             - name: ACCESS_TOKEN_MERCADOPAGO
               valueFrom:
                 secretKeyRef:
@@ -76,7 +61,7 @@ spec:
                   name: mercadopago-secret
                   key: WEBHOOK_URL_MERCADOPAGO
           ports:
-            - containerPort: 3000
+            - containerPort: 3003
           resources:
             # You must specify requests for CPU to autoscale
             # based on CPU utilization
