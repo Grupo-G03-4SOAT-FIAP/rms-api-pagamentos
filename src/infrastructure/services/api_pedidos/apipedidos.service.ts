@@ -14,7 +14,7 @@ export class ApiPedidosService implements IApiPedidosService {
   async atualizarStatusPedido(idPedido: string): Promise<void> {
     try {
       await axios.put(`${this._urlApiPedidos}/${idPedido}`, {
-        pago: true,
+        statusPagamento: 'pago',
         statusPedido: 'em_preparacao',
       });
     } catch (error) {
