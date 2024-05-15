@@ -8,5 +8,5 @@ metadata:
 data:
   DB_NAME: "pagamentos"
   DB_SSL: "false"
-  URL_API_PEDIDOS: ""
+  URL_API_PEDIDOS: "http://rms-api-pedidos.rms.svc.cluster.local:80/pedido"
   IDEMPOTENCY_KEY_MERCADOPAGO: "a005986e-f97c-4274-91cf-b32d2672824f"
