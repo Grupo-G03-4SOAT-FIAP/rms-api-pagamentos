@@ -7,6 +7,10 @@ import {
   pedidoUseCaseMock,
 } from 'src/mocks/pedido.mock';
 
+const webhookUseCaseMockFactory = () => ({
+  consumirMensagem: jest.fn(),
+});
+
 describe('PedidoController', () => {
   let pedidoController: PedidoController;
 
