@@ -41,7 +41,7 @@ Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvo
 1. Clone este repositório;
 2. Navegue até a pasta raiz do projeto usando o Terminal;
 3. Faça uma cópia do arquivo `.env.template` com o nome `.env` e preencha as variáveis de ambiente dentro dele;
-4. Execute o comando `docker-compose up`
+4. Execute o comando `docker-compose up -d`
 5. Acesse o Swagger em http://localhost:3000/swagger/
 
 </details>
@@ -177,13 +177,16 @@ https://github.com/Grupo-G03-4SOAT-FIAP/rms-iac
 
 ## OWASP ZAP
 
+#### Reports OWASP ZAP API Scan
+Os reports de "antes" e "depois" encontram-se na pasta `/docs/zap-scanning-report`
+
 <details>
 
 <summary>Como escanear a API usando o OWASP ZAP?</summary>
 
 ### ZAP - API Scan
 
-Para escanear todos os endpoints da API em busca de possíveis vulnerabilidades, a partir do swagger, siga o passo a passo abaixo.
+Para escanear todos os endpoints da API em busca de vulnerabilidades siga o passo a passo abaixo.
 
 1. Execute a aplicação usando o Docker Compose;
 2. Execute o comando abaixo:
