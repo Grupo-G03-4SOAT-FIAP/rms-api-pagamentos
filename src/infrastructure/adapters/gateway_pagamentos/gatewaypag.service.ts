@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MercadoPagoConfig, MerchantOrder } from 'mercadopago';
 import { DateTime } from 'luxon';
@@ -16,24 +16,32 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
   private _webhookURL: string;
   private _idempotencyKey: string;
 
-  constructor(private configService: ConfigService) {
-    this._accessToken = this.configService.get<string>(
+  constructor(
+    private readonly logger: Logger,
+    private configService: ConfigService,
+  ) {
+    this._accessToken = this.configService.getOrThrow<string>(
       'ACCESS_TOKEN_MERCADOPAGO',
     );
-    this._user_id = this.configService.get<string>('USER_ID_MERCADOPAGO');
-    this._external_pos_id = this.configService.get<string>(
+    this._user_id = this.configService.getOrThrow<string>(
+      'USER_ID_MERCADOPAGO',
+    );
+    this._external_pos_id = this.configService.getOrThrow<string>(
       'EXTERNAL_POS_ID_MERCADOPAGO',
     );
-    this._webhookURL = this.configService.get<string>(
+    this._webhookURL = this.configService.getOrThrow<string>(
       'WEBHOOK_URL_MERCADOPAGO',
     );
-    this._idempotencyKey = this.configService.get<string>(
+    this._idempotencyKey = this.configService.getOrThrow<string>(
       'IDEMPOTENCY_KEY_MERCADOPAGO',
     );
   }
 
   async criarPedido(pedido: PedidoEntity): Promise<string> {
-    // Criar um novo Pedido do Mercado Pago
+    this.logger.debug(
+      `Criando pedido QR Code Modelo Dinâmico no Mercado Pago...`,
+    );
+
     const dataValidadeQrCode = DateTime.now()
       .setZone('UTC')
       .plus({ hours: 24 })
@@ -65,11 +73,19 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
     try {
       const response = await axios.request(config);
       if (response.data.qr_data) {
+        this.logger.log(
+          `QR Code Modelo Dinâmico gerado com sucesso no Mercado Pago para o pedido ${pedido.id}`,
+          response.data,
+        );
         const qr_data = response.data.qr_data;
         return qr_data;
       }
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Ocorreu um erro ao gerar o QR Code Modelo Dinâmico para o pedido ${pedido.id} no Mercado Pago`,
+        error,
+        pedido,
+      );
     }
   }
 
@@ -105,22 +121,41 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
   }
 
   async consultarPedido(idPedido: string): Promise<PedidoGatewayPagamentoDTO> {
+    this.logger.debug(
+      `Consultando pedido ${idPedido} no Mercado Pago`,
+      idPedido,
+    );
+
     // Consulta o pedido usando a SDK do Mercado Pago
     const client = new MercadoPagoConfig({
       accessToken: this._accessToken,
       options: { timeout: 5000, idempotencyKey: this._idempotencyKey },
     });
+
     const customerClient = new MerchantOrder(client);
+
     const merchantOrderId = idPedido;
+
     try {
       const merchantOrderResponse = await customerClient.get({
         merchantOrderId: merchantOrderId,
       });
+
       const pedidoGatewayPag =
         merchantOrderResponse as unknown as PedidoGatewayPagamentoDTO;
+
+      this.logger.debug(
+        `Pedido ${idPedido} consultado com sucesso no Mercado Pago`,
+        idPedido,
+        pedidoGatewayPag,
+      );
+
       return pedidoGatewayPag;
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Erro ao consultar o pedido ${idPedido} no Mercado Pago`,
+        error,
+      );
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Logger, Module, forwardRef } from '@nestjs/common';
 import { PedidoUseCase } from '../application/use_cases/pedido/pedido.use_case';
 import { PedidoDTOFactory } from '../domain/pedido/factories/pedido.dto.factory';
 import { PedidoFactory } from '../domain/pedido/factories/pedido.factory';
@@ -9,9 +9,9 @@ import { IPedidoUseCase } from '../domain/pedido/interfaces/pedido.use_case.port
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { PedidoController } from '../presentation/rest/v1/controllers/pedido/pedido.controller';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
-import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
-import { ApiPedidosService } from 'src/infrastructure/services/api_pedidos/apipedidos.service';
+import { GatewayMercadoPagoService } from '../infrastructure/adapters/gateway_pagamentos/gatewaypag.service';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
+import { ApiPedidosService } from 'src/infrastructure/services/api_pedido/apipedido.service';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
 import { IProdutoDTOFactory } from 'src/domain/produto/interfaces/produto.dto.factory.port';
 import { ProdutoFactory } from 'src/domain/produto/factories/produto.factory';
@@ -21,11 +21,15 @@ import { ICategoriaDTOFactory } from 'src/domain/categoria/interfaces/categoria.
 import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
 import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
 import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
+import { PubSubModule } from './pubsub.module';
+import { FilaCobrancaGeradaAdapter } from 'src/infrastructure/adapters/filas/cobranca_gerada/cobranca_gerada.adapter';
+import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranca_gerada.port';
 
 @Module({
+  imports: [PubSubModule, forwardRef(() => MongoDataServicesModule)],
   controllers: [PedidoController],
-  imports: [forwardRef(() => MongoDataServicesModule)],
   providers: [
+    Logger,
     PedidoUseCase,
     {
       provide: IPedidoUseCase,
@@ -75,6 +79,10 @@ import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-ser
     {
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
+    },
+    {
+      provide: IFilaCobrancaGeradaAdapter,
+      useClass: FilaCobrancaGeradaAdapter,
     },
   ],
   exports: [],

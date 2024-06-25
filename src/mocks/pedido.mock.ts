@@ -79,7 +79,7 @@ pedidoDTOMock.statusPedido = pedidoModelMock.statusPedido;
 pedidoDTOMock.qrCode = null;
 
 export const configServiceMock = {
-  get: jest.fn((key: string) => {
+  getOrThrow: jest.fn((key: string) => {
     if (key === 'ACCESS_TOKEN_MERCADOPAGO') {
       return 'TEST-844********54504-01********443991c5********a5b5e4db********5758942';
     }
@@ -203,4 +203,9 @@ export const pedidoUseCaseMock = {
   buscarPedido: jest.fn(),
   listarPedidos: jest.fn(),
   listarPedidosRecebido: jest.fn(),
+};
+
+// Mock jest das funções do adapter da fila de cobranca-gerada
+export const filaCobrancaGeradaAdapterMock = {
+  publicarCobrancaGerada: jest.fn(),
 };

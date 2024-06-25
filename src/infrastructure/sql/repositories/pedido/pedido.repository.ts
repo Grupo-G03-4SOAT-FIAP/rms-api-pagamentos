@@ -25,11 +25,16 @@ export class PedidoRepository implements IPedidoRepository {
     }
   }
 
-  async guardarMsgWebhook(id, topic: string): Promise<RetornoMPDTO> {
+  async guardarMsgWebhook(
+    id,
+    topic: string,
+    mensagem?: string,
+  ): Promise<RetornoMPDTO> {
     try {
       const retornoMp = await this.dataServices.retorno_mp.create({
         id,
         topic,
+        mensagem,
       });
       return retornoMp;
     } catch (error) {

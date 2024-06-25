@@ -1,44 +1,56 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
-import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
-import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
-import { PedidoGatewayPagamentoDTO } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
+import {
+  MensagemMercadoPagoDTO,
+  PedidoGatewayPagamentoDTO,
+} from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
 
 @Injectable()
 export class WebhookUseCase implements IWebhookUseCase {
   constructor(
+    private readonly logger: Logger,
     @Inject(IPedidoRepository)
     private readonly pedidoRepository: IPedidoRepository,
-    @Inject(IPedidoFactory)
-    private readonly pedidoFactory: IPedidoFactory,
     @Inject(IGatewayPagamentoService)
     private readonly gatewayPagamentoService: IGatewayPagamentoService,
     @Inject(IApiPedidosService)
     private readonly apiPedidosService: IApiPedidosService,
-    @Inject(IPedidoDTOFactory)
-    private readonly pedidoDTOFactory: IPedidoDTOFactory,
   ) {}
 
   async consumirMensagem(
     id: string,
     topic: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    //mensagem: MensagemMercadoPagoDTO,
+    mensagem: MensagemMercadoPagoDTO,
   ): Promise<any> {
-    await this.pedidoRepository.guardarMsgWebhook(id, topic);
+    this.logger.debug(
+      `Processando request do Mercado Pago...`,
+      id,
+      topic,
+      mensagem,
+    );
+    await this.pedidoRepository.guardarMsgWebhook(
+      id,
+      topic,
+      JSON.stringify(mensagem),
+    );
 
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =
         await this.gatewayPagamentoService.consultarPedido(id);
       const idInternoPedido = pedidoGatewayPag.external_reference;
       if (this.verificarPagamento(pedidoGatewayPag)) {
+        this.logger.log(
+          `O pedido ${idInternoPedido} foi pago`,
+          pedidoGatewayPag,
+        );
         this.apiPedidosService.atualizarStatusPedido(idInternoPedido);
       }
+      this.logger.debug(`A request do Mercado Pago foi processada com sucesso`);
       return {
-        mensagem: 'Mensagem consumida com sucesso',
+        mensagem: 'Request processada com sucesso',
       };
     }
   }
