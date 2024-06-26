@@ -42,6 +42,7 @@ services:
           memory: 1024M
         reservations:
           memory: 1024M
+    restart: always
     networks:
       - rms
 
@@ -64,6 +65,7 @@ services:
           memory: 1024M
         reservations:
           memory: 1024M
+    restart: always
     networks:
       - rms
           
