@@ -36,7 +36,7 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
     // Criar um novo Pedido do Mercado Pago
     const dataValidadeQrCode = DateTime.now()
       .setZone('UTC')
-      .plus({ hours: 24 })
+      .plus({ minutes: 5 })
       .toISO();
     const itensPedidoMercadoPago = this.gerarItensPedidoMercadoPago(
       pedido.itensPedido,
