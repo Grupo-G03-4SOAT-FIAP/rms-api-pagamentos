@@ -56,7 +56,7 @@ export class PedidoUseCase implements IPedidoUseCase {
         pedido,
       );
 
-      // TODO: Publicar o pedidoDTO? na fila falha-cobranca
+      // TODO: Publicar o pedidoDTO na fila falha-cobranca
 
       throw error;
     }

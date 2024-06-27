@@ -21,16 +21,60 @@ import { ICategoriaDTOFactory } from 'src/domain/categoria/interfaces/categoria.
 import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
 import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
 import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
-import { PubSubModule } from './pubsub.module';
 import { FilaCobrancaGeradaAdapter } from 'src/infrastructure/adapters/filas/cobranca_gerada/cobranca_gerada.adapter';
 import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranca_gerada.port';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SqsModule } from '@ssut/nestjs-sqs';
+import { SQSClient } from '@aws-sdk/client-sqs';
+import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobranca/cobranca.message_handler';
 
 @Module({
-  imports: [PubSubModule, forwardRef(() => MongoDataServicesModule)],
+  imports: [
+    forwardRef(() => MongoDataServicesModule),
+    SqsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        return {
+          consumers: [
+            {
+              name: configService.getOrThrow<string>('NOME_FILA_NOVA_COBRANCA'),
+              queueUrl: configService.getOrThrow<string>(
+                'URL_FILA_NOVA_COBRANCA',
+              ),
+              region: configService.getOrThrow<string>(
+                'REGION_FILA_NOVA_COBRANCA',
+              ),
+              sqs: new SQSClient({
+                region: configService.getOrThrow<string>(
+                  'REGION_FILA_NOVA_COBRANCA',
+                ),
+                endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
+              }),
+            },
+          ],
+          producers: [
+            {
+              name: configService.getOrThrow<string>(
+                'NOME_FILA_COBRANCA_GERADA',
+              ),
+              queueUrl: configService.getOrThrow<string>(
+                'URL_FILA_COBRANCA_GERADA',
+              ),
+              region: configService.getOrThrow<string>(
+                'REGION_FILA_COBRANCA_GERADA',
+              ),
+            },
+          ],
+        };
+      },
+      inject: [ConfigService],
+    }),
+  ],
   controllers: [PedidoController],
   providers: [
     Logger,
     PedidoUseCase,
+    CobrancaMessageHandler,
     {
       provide: IPedidoUseCase,
       useClass: PedidoUseCase,
@@ -87,4 +131,4 @@ import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranc
   ],
   exports: [],
 })
-export class PedidoModule {}
+export class PedidoModule { }
