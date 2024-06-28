@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WebhookController } from './webhook.controller';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
-import { NotFoundException } from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
 
 describe('WebhookController', () => {
   let controller: WebhookController;
@@ -15,6 +15,7 @@ describe('WebhookController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WebhookController],
       providers: [
+        Logger,
         {
           provide: IWebhookUseCase,
           useFactory: webhookUseCaseMockFactory,
@@ -35,7 +36,7 @@ describe('WebhookController', () => {
 
     webhookUseCaseMock.consumirMensagem.mockResolvedValue(mensagemEsperada);
 
-    const result = await controller.consumirMensagem(id, topic);
+    const result = await controller.consumirMensagem(id, topic, null);
 
     expect(webhookUseCaseMock.consumirMensagem).toHaveBeenCalledWith(id, topic);
 
@@ -50,7 +51,7 @@ describe('WebhookController', () => {
       new NotFoundException('Pedido não encontrado'),
     );
 
-    await expect(controller.consumirMensagem(id, topic)).rejects.toThrow(
+    await expect(controller.consumirMensagem(id, topic, null)).rejects.toThrow(
       NotFoundException,
     );
   });

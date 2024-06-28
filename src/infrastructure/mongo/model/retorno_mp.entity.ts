@@ -9,6 +9,8 @@ export class RetornoMP {
   id: string;
   @Prop()
   topic: string;
+  @Prop()
+  mensagem: string;
 }
 
 export const RetornoMPSchema = SchemaFactory.createForClass(RetornoMP);

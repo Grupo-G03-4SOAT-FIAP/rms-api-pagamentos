@@ -7,7 +7,11 @@ export interface IPedidoRepository {
     qrData: string,
     date: Date,
   ): Promise<Pagamento>;
-  guardarMsgWebhook(id: string, topic: string): Promise<RetornoMPDTO>;
+  guardarMsgWebhook(
+    id: string,
+    topic: string,
+    mensagem: string,
+  ): Promise<RetornoMPDTO>;
 }
 
 export const IPedidoRepository = Symbol('IPedidoRepository');

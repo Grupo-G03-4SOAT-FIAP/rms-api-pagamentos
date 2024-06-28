@@ -13,9 +13,10 @@ import {
   pedidoModelMock,
   pedidoRepositoryMock,
 } from 'src/mocks/pedido.mock';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
 import { ConfigService } from '@nestjs/config';
 import { WebhookUseCase } from './webhook.use_case';
+import { Logger } from '@nestjs/common';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
 
 describe('WebhookUseCase', () => {
   let webhookUseCase: WebhookUseCase;
@@ -24,6 +25,7 @@ describe('WebhookUseCase', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        Logger,
         WebhookUseCase,
         ConfigService,
         {
@@ -71,13 +73,14 @@ describe('WebhookUseCase', () => {
     const result = await webhookUseCase.consumirMensagem(
       idPedidoMercadoPago,
       topicMercadoPago,
+      null,
     );
 
     expect(apiPedidosServiceMock.atualizarStatusPedido).toHaveBeenCalledWith(
       pedidoId,
     );
     expect(result).toStrictEqual({
-      mensagem: 'Mensagem consumida com sucesso',
+      mensagem: 'Request processada com sucesso',
     });
   });
 });

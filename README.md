@@ -9,6 +9,8 @@
 
 Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvolvido pelo grupo *"BOPE"* G03 da turma 4SOAT para o Tech Challenge da [Pós Tech em Software Architecture da FIAP](https://postech.fiap.com.br/curso/software-architecture/).
 
+![image](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pagamentos/assets/5115895/514f739a-a74d-48a0-913d-8065d99e6f78)
+
 #### Stack
 
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)

@@ -17,7 +17,7 @@ import { ConfigService } from '@nestjs/config';
     MongooseModule.forRootAsync({
       inject: [ConfigService], // Injete o ConfigService
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URL'), // Use o ConfigService para obter a variável de ambiente
+        uri: configService.getOrThrow<string>('MONGO_URL'), // Use o ConfigService para obter a variável de ambiente
         dbName: 'pagamentos',
       }),
     }),

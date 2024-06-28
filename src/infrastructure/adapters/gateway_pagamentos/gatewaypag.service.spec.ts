@@ -7,6 +7,7 @@ import {
   mercadoPagoResponseMock,
   pedidoEntityMock,
 } from 'src/mocks/pedido.mock';
+import { Logger } from '@nestjs/common';
 
 describe('GatewayMercadoPagoService', () => {
   let gatewayMercadoPagoService: GatewayMercadoPagoService;
@@ -15,6 +16,7 @@ describe('GatewayMercadoPagoService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        Logger,
         GatewayMercadoPagoService,
         {
           provide: ConfigService,

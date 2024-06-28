@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApiPedidosService } from './apipedidos.service';
+import { ApiPedidosService } from './apipedido.service';
 import { pedidoResponseMock } from 'src/mocks/pedido.mock';
 
-describe('ApiPedidosService', () => {
+describe('FilaCobrancaGeradaAdapter', () => {
   let apiPedidosService: ApiPedidosService;
   let configService: ConfigService;
   let pedidoId: string;
@@ -17,6 +17,7 @@ describe('ApiPedidosService', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn(),
+            getOrThrow: jest.fn(),
           },
         },
       ],

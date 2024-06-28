@@ -7,6 +7,7 @@ import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.facto
 import {
   apiPedidosServiceMock,
   criaPedidoDTOMock,
+  filaCobrancaGeradaAdapterMock,
   gatewayPagamentoServiceMock,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
@@ -15,8 +16,10 @@ import {
   pedidoModelMock,
   pedidoRepositoryMock,
 } from 'src/mocks/pedido.mock';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedidos.service.port';
+import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
+import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranca_gerada.port';
 
 describe('PedidoUseCase', () => {
   let pedidoUseCase: PedidoUseCase;
@@ -24,6 +27,7 @@ describe('PedidoUseCase', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        Logger,
         PedidoUseCase,
         ConfigService,
         {
@@ -45,6 +49,10 @@ describe('PedidoUseCase', () => {
         {
           provide: IPedidoDTOFactory,
           useValue: pedidoDTOFactoryMock,
+        },
+        {
+          provide: IFilaCobrancaGeradaAdapter,
+          useValue: filaCobrancaGeradaAdapterMock,
         },
       ],
     }).compile();
