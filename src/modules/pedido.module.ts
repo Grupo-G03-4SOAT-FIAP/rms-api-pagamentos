@@ -26,7 +26,9 @@ import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranc
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobranca/cobranca.message_handler';
+import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/nova_cobranca/nova_cobranca.handler';
+import { FilaFalhaCobrancaAdapter } from 'src/infrastructure/adapters/filas/falha_cobranca/falha_cobranca.adapter';
+import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_cobranca.port';
 
 @Module({
   imports: [
@@ -63,6 +65,29 @@ import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobr
               region: configService.getOrThrow<string>(
                 'REGION_FILA_COBRANCA_GERADA',
               ),
+              sqs: new SQSClient({
+                region: configService.getOrThrow<string>(
+                  'REGION_FILA_COBRANCA_GERADA',
+                ),
+                endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
+              }),
+            },
+            {
+              name: configService.getOrThrow<string>(
+                'NOME_FILA_FALHA_COBRANCA',
+              ),
+              queueUrl: configService.getOrThrow<string>(
+                'URL_FILA_FALHA_COBRANCA',
+              ),
+              region: configService.getOrThrow<string>(
+                'REGION_FILA_FALHA_COBRANCA',
+              ),
+              sqs: new SQSClient({
+                region: configService.getOrThrow<string>(
+                  'REGION_FILA_FALHA_COBRANCA',
+                ),
+                endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
+              }),
             },
           ],
         };
@@ -73,8 +98,8 @@ import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobr
   controllers: [PedidoController],
   providers: [
     Logger,
-    PedidoUseCase,
     CobrancaMessageHandler,
+    PedidoUseCase,
     {
       provide: IPedidoUseCase,
       useClass: PedidoUseCase,
@@ -124,11 +149,17 @@ import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobr
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
     },
+    FilaCobrancaGeradaAdapter,
     {
       provide: IFilaCobrancaGeradaAdapter,
       useClass: FilaCobrancaGeradaAdapter,
     },
+    FilaFalhaCobrancaAdapter,
+    {
+      provide: IFilaFalhaCobrancaAdapter,
+      useClass: FilaFalhaCobrancaAdapter,
+    },
   ],
   exports: [],
 })
-export class PedidoModule { }
+export class PedidoModule {}

@@ -5,7 +5,7 @@ import {
   pedidoDTOMock,
   pedidoUseCaseMock,
 } from 'src/mocks/pedido.mock';
-import { CobrancaMessageHandler } from './cobranca.message_handler';
+import { CobrancaMessageHandler } from './nova_cobranca.handler';
 import { IPedidoUseCase } from 'src/domain/pedido/interfaces/pedido.use_case.port';
 import { messageMock } from 'src/mocks/message.mock';
 import { Logger } from '@nestjs/common';
