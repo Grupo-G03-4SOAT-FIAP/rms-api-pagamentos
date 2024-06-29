@@ -6,7 +6,6 @@ metadata:
   labels:
     app: rms-api-pagamentos
 data:
-  DB_NAME: "pagamentos"
-  DB_SSL: "false"
   URL_API_PEDIDOS: "http://rms-api-pedidos.rms.svc.cluster.local:80/pedido"
+  BASE_URL_API_MERCADOPAGO: "https://api.mercadopago.com"
   IDEMPOTENCY_KEY_MERCADOPAGO: "a005986e-f97c-4274-91cf-b32d2672824f"

@@ -41,13 +41,19 @@ export class WebhookUseCase implements IWebhookUseCase {
       const pedidoGatewayPag =
         await this.gatewayPagamentoService.consultarPedido(id);
       const idInternoPedido = pedidoGatewayPag.external_reference;
+
       if (this.verificarPagamento(pedidoGatewayPag)) {
         this.logger.log(
           `O pedido ${idInternoPedido} foi pago`,
           pedidoGatewayPag,
         );
+
+        // TODO: Abaixo, ao invés de chamar a API de Pedidos, publicar msg na fila pagamento-confirmado ( ̶p̶a̶g̶a̶m̶e̶n̶t̶o̶-̶r̶e̶a̶l̶i̶z̶a̶d̶o̶)
         this.apiPedidosService.atualizarStatusPedido(idInternoPedido);
+      } else {
+        // TODO: Publicar msg na fila falha-pagamento
       }
+
       this.logger.debug(`A request do Mercado Pago foi processada com sucesso`);
       return {
         mensagem: 'Request processada com sucesso',

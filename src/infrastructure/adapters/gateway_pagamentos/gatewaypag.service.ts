@@ -10,6 +10,7 @@ import BigNumber from 'bignumber.js';
 
 @Injectable()
 export class GatewayMercadoPagoService implements IGatewayPagamentoService {
+  private _baseUrlApiMP: string;
   private _accessToken: string;
   private _user_id: string;
   private _external_pos_id: string;
@@ -20,6 +21,9 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
     private readonly logger: Logger,
     private configService: ConfigService,
   ) {
+    this._baseUrlApiMP = this.configService.getOrThrow<string>(
+      'BASE_URL_API_MERCADOPAGO',
+    );
     this._accessToken = this.configService.getOrThrow<string>(
       'ACCESS_TOKEN_MERCADOPAGO',
     );
@@ -59,10 +63,14 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
       total_amount: this.calcularValorTotalPedido(itensPedidoMercadoPago),
     });
 
+    const baseUrlApiMP = this._baseUrlApiMP;
+    const user_id = this._user_id;
+    const external_pos_id = this._external_pos_id;
+
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `https://api.mercadopago.com/instore/orders/qr/seller/collectors/${this._user_id}/pos/${this._external_pos_id}/qrs`,
+      url: `${baseUrlApiMP}/instore/orders/qr/seller/collectors/${user_id}/pos/${external_pos_id}/qrs`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this._accessToken}`,
@@ -82,10 +90,10 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
       }
     } catch (error) {
       this.logger.error(
-        `Ocorreu um erro ao gerar o QR Code Modelo Dinâmico para o pedido ${pedido.id} no Mercado Pago`,
+        `Ocorreu um erro ao gerar QR Code Modelo Dinâmico para o pedido ${pedido.id}`,
         error,
-        pedido,
       );
+      throw error;
     }
   }
 

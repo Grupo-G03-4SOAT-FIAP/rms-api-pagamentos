@@ -33,21 +33,17 @@ export class CobrancaMessageHandler {
       await this.pedidoUseCase.criarPedido(criaPedidoDTO);
     } catch (error) {
       this.logger.error(
-        `Ocorreu um erro ao processar a mensagem`,
+        `Ocorreu um erro ao processar a mensagem com MessageId ${message?.MessageId}`,
         error,
         JSON.stringify(message),
       );
     }
   }
 
-  @SqsConsumerEventHandler(
-    /** name: */ 'queueName',
-    /** eventName: */ 'processing_error',
-  )
+  @SqsConsumerEventHandler('nova-cobranca', 'processing_error')
   public onProcessingError(error: Error, message: Message) {
-    // report errors here
     this.logger.error(
-      `Ocorreu um erro ao processar a mensagem`,
+      `Ocorreu um erro ao processar a mensagem com MessageId ${message?.MessageId}`,
       error,
       JSON.stringify(message),
     );
