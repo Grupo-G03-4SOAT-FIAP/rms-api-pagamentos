@@ -8,6 +8,7 @@ import {
   apiPedidosServiceMock,
   criaPedidoDTOMock,
   filaCobrancaGeradaAdapterMock,
+  filaFalhaCobrancaAdapter,
   gatewayPagamentoServiceMock,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
@@ -20,6 +21,7 @@ import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.servi
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranca_gerada.port';
+import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_cobranca.port';
 
 describe('PedidoUseCase', () => {
   let pedidoUseCase: PedidoUseCase;
@@ -53,6 +55,10 @@ describe('PedidoUseCase', () => {
         {
           provide: IFilaCobrancaGeradaAdapter,
           useValue: filaCobrancaGeradaAdapterMock,
+        },
+        {
+          provide: IFilaFalhaCobrancaAdapter,
+          useValue: filaFalhaCobrancaAdapter,
         },
       ],
     }).compile();

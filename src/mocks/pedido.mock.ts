@@ -209,3 +209,8 @@ export const pedidoUseCaseMock = {
 export const filaCobrancaGeradaAdapterMock = {
   publicarCobrancaGerada: jest.fn(),
 };
+
+// Mock jest das funções do adapter da fila de cobranca-gerada
+export const filaFalhaCobrancaAdapter = {
+  publicarFalhaCobranca: jest.fn(),
+};

@@ -27,6 +27,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import { SQSClient } from '@aws-sdk/client-sqs';
 import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobranca/cobranca.message_handler';
+import { FilaFalhaCobrancaAdapter } from 'src/infrastructure/adapters/filas/falha_cobranca/falha_cobranca.adapter';
+import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_cobranca.port';
 
 @Module({
   imports: [
@@ -73,8 +75,8 @@ import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobr
   controllers: [PedidoController],
   providers: [
     Logger,
-    PedidoUseCase,
     CobrancaMessageHandler,
+    PedidoUseCase,
     {
       provide: IPedidoUseCase,
       useClass: PedidoUseCase,
@@ -124,9 +126,15 @@ import { CobrancaMessageHandler } from 'src/infrastructure/message_handlers/cobr
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
     },
+    FilaCobrancaGeradaAdapter,
     {
       provide: IFilaCobrancaGeradaAdapter,
       useClass: FilaCobrancaGeradaAdapter,
+    },
+    FilaFalhaCobrancaAdapter,
+    {
+      provide: IFilaFalhaCobrancaAdapter,
+      useClass: FilaFalhaCobrancaAdapter,
     },
   ],
   exports: [],
