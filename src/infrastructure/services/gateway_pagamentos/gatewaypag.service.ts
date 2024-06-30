@@ -48,7 +48,7 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
 
     const dataValidadeQrCode = DateTime.now()
       .setZone('UTC')
-      .plus({ minutes: 5 })
+      .plus({ minutes: 15 })
       .toISO();
     const itensPedidoMercadoPago = this.gerarItensPedidoMercadoPago(
       pedido.itensPedido,
