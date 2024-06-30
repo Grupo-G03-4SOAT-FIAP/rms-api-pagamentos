@@ -4,8 +4,10 @@ import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import {
-  filaPagamentoConfirmadoAdapter,
+  filaFalhaPagamentoAdapterMock,
+  filaPagamentoConfirmadoAdapterMock,
   gatewayPagamentoServiceMock,
+  pedidoCanceladoGatewayPagamentoDTO,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
   pedidoFactoryMock,
@@ -16,7 +18,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { WebhookUseCase } from './webhook.use_case';
 import { Logger } from '@nestjs/common';
-import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado.adapter';
+import { IFilaFalhaPagamentoAdapter } from 'src/domain/pedido/interfaces/falha_pag.adapter';
 
 describe('WebhookUseCase', () => {
   let webhookUseCase: WebhookUseCase;
@@ -42,7 +45,11 @@ describe('WebhookUseCase', () => {
         },
         {
           provide: IFilaPagamentoConfirmadoAdapter,
-          useValue: filaPagamentoConfirmadoAdapter,
+          useValue: filaPagamentoConfirmadoAdapterMock,
+        },
+        {
+          provide: IFilaFalhaPagamentoAdapter,
+          useValue: filaFalhaPagamentoAdapterMock,
         },
         {
           provide: IPedidoDTOFactory,
@@ -59,7 +66,7 @@ describe('WebhookUseCase', () => {
     jest.clearAllMocks();
   });
 
-  it('deve atualizar o status de pagamento do pedido com sucesso', async () => {
+  it('deve publicar mensagem de pagamento confirmado', async () => {
     const idPedidoMercadoPago = '15171882961';
     const topicMercadoPago = 'merchant_order';
 
@@ -77,7 +84,32 @@ describe('WebhookUseCase', () => {
     );
 
     expect(
-      filaPagamentoConfirmadoAdapter.publicarPagamentoConfirmado,
+      filaPagamentoConfirmadoAdapterMock.publicarPagamentoConfirmado,
+    ).toHaveBeenCalledWith(pedidoId);
+    expect(result).toStrictEqual({
+      mensagem: 'Request processada com sucesso',
+    });
+  });
+
+  it('deve publicar mensagem de falha no pagamento', async () => {
+    const idPedidoMercadoPago = '15171882961';
+    const topicMercadoPago = 'merchant_order';
+
+    pedidoRepositoryMock.buscarPedido.mockReturnValue(pedidoModelMock);
+    pedidoRepositoryMock.editarStatusPedido.mockReturnValue(pedidoModelMock);
+    pedidoDTOFactoryMock.criarPedidoDTO.mockReturnValue(pedidoDTOMock);
+    gatewayPagamentoServiceMock.consultarPedido.mockReturnValue(
+      pedidoCanceladoGatewayPagamentoDTO,
+    );
+
+    const result = await webhookUseCase.consumirMensagem(
+      idPedidoMercadoPago,
+      topicMercadoPago,
+      null,
+    );
+
+    expect(
+      filaFalhaPagamentoAdapterMock.publicarFalhaPagamento,
     ).toHaveBeenCalledWith(pedidoId);
     expect(result).toStrictEqual({
       mensagem: 'Request processada com sucesso',
