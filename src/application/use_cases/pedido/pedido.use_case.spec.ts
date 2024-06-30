@@ -5,7 +5,7 @@ import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import {
-  apiPedidosServiceMock,
+  filaPagamentoConfirmadoAdapter,
   criaPedidoDTOMock,
   filaCobrancaGeradaAdapterMock,
   filaFalhaCobrancaAdapter,
@@ -17,7 +17,7 @@ import {
   pedidoModelMock,
   pedidoRepositoryMock,
 } from 'src/mocks/pedido.mock';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 import { IFilaCobrancaGeradaAdapter } from 'src/domain/pedido/interfaces/cobranca_gerada.port';
@@ -45,8 +45,8 @@ describe('PedidoUseCase', () => {
           useValue: gatewayPagamentoServiceMock,
         },
         {
-          provide: IApiPedidosService,
-          useValue: apiPedidosServiceMock,
+          provide: IFilaPagamentoConfirmadoAdapter,
+          useValue: filaPagamentoConfirmadoAdapter,
         },
         {
           provide: IPedidoDTOFactory,

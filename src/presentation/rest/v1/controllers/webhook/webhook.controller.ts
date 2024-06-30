@@ -12,7 +12,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import { BadRequestError } from '../../helpers/swagger/status-codes/bad_requests.swagger';
 import { NotFoundError } from '../../helpers/swagger/status-codes/not_found.swagger';
-import { MensagemMercadoPagoDTO } from '../../presenters/pedido/gatewaypag.dto';
+import { NotificacaoMercadoPagoDTO } from '../../presenters/pedido/gatewaypag.dto';
 
 @Controller('webhook')
 @ApiTags('Webhook')
@@ -42,14 +42,13 @@ export class WebhookController {
   async consumirMensagem(
     @Query('id') id: string,
     @Query('topic') topic: string,
-    @Body() mensagem: MensagemMercadoPagoDTO,
+    @Body() notificacao: NotificacaoMercadoPagoDTO,
   ) {
-    this.logger.log(
-      `Nova request recebida no webhook do Mercado Pago`,
-      id,
-      topic,
-      mensagem,
-    );
+    this.logger.log(`Nova request recebida no webhook do Mercado Pago`, {
+      id: id,
+      topic: topic,
+      body: JSON.stringify(notificacao),
+    });
     try {
       return await this.webhookUseCase.consumirMensagem(id, topic);
     } catch (error) {

@@ -6,9 +6,9 @@ import { IPedidoFactory } from '../domain/pedido/interfaces/pedido.factory.port'
 import { IPedidoRepository } from '../domain/pedido/interfaces/pedido.repository.port';
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
-import { GatewayMercadoPagoService } from '../infrastructure/adapters/gateway_pagamentos/gatewaypag.service';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
-import { ApiPedidosService } from 'src/infrastructure/services/api_pedido/apipedido.service';
+import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { FilaPagamentoConfirmadoAdapter } from 'src/infrastructure/adapters/filas/pagamento_confirmado/pag_confirmado.adapter';
 import { WebhookController } from 'src/presentation/rest/v1/controllers/webhook/webhook.controller';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
 import { IProdutoDTOFactory } from 'src/domain/produto/interfaces/produto.dto.factory.port';
@@ -57,10 +57,10 @@ import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-ser
       provide: IGatewayPagamentoService,
       useClass: GatewayMercadoPagoService,
     },
-    ApiPedidosService,
+    FilaPagamentoConfirmadoAdapter,
     {
-      provide: IApiPedidosService,
-      useClass: ApiPedidosService,
+      provide: IFilaPagamentoConfirmadoAdapter,
+      useClass: FilaPagamentoConfirmadoAdapter,
     },
     ProdutoDTOFactory,
     {

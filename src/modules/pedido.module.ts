@@ -9,9 +9,9 @@ import { IPedidoUseCase } from '../domain/pedido/interfaces/pedido.use_case.port
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { PedidoController } from '../presentation/rest/v1/controllers/pedido/pedido.controller';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
-import { GatewayMercadoPagoService } from '../infrastructure/adapters/gateway_pagamentos/gatewaypag.service';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
-import { ApiPedidosService } from 'src/infrastructure/services/api_pedido/apipedido.service';
+import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { FilaPagamentoConfirmadoAdapter } from 'src/infrastructure/adapters/filas/pagamento_confirmado/pag_confirmado.adapter';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
 import { IProdutoDTOFactory } from 'src/domain/produto/interfaces/produto.dto.factory.port';
 import { ProdutoFactory } from 'src/domain/produto/factories/produto.factory';
@@ -73,18 +73,35 @@ import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_co
               }),
             },
             {
-              name: configService.getOrThrow<string>(
+              name: configService.get<string>(
                 'NOME_FILA_FALHA_COBRANCA',
               ),
-              queueUrl: configService.getOrThrow<string>(
+              queueUrl: configService.get<string>(
                 'URL_FILA_FALHA_COBRANCA',
               ),
-              region: configService.getOrThrow<string>(
+              region: configService.get<string>(
                 'REGION_FILA_FALHA_COBRANCA',
               ),
               sqs: new SQSClient({
-                region: configService.getOrThrow<string>(
+                region: configService.get<string>(
                   'REGION_FILA_FALHA_COBRANCA',
+                ),
+                endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
+              }),
+            },
+            {
+              name: configService.getOrThrow<string>(
+                'NOME_FILA_PAGAMENTO_CONFIRMADO',
+              ),
+              queueUrl: configService.getOrThrow<string>(
+                'URL_FILA_PAGAMENTO_CONFIRMADO',
+              ),
+              region: configService.getOrThrow<string>(
+                'REGION_FILA_PAGAMENTO_CONFIRMADO',
+              ),
+              sqs: new SQSClient({
+                region: configService.getOrThrow<string>(
+                  'REGION_FILA_PAGAMENTO_CONFIRMADO',
                 ),
                 endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
               }),
@@ -134,10 +151,10 @@ import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_co
       provide: IGatewayPagamentoService,
       useClass: GatewayMercadoPagoService,
     },
-    ApiPedidosService,
+    FilaPagamentoConfirmadoAdapter,
     {
-      provide: IApiPedidosService,
-      useClass: ApiPedidosService,
+      provide: IFilaPagamentoConfirmadoAdapter,
+      useClass: FilaPagamentoConfirmadoAdapter,
     },
     ProdutoDTOFactory,
     {
