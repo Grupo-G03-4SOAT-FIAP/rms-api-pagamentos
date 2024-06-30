@@ -6,11 +6,13 @@ import {
   IsUUID,
   IsArray,
   IsOptional,
-  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ItemPedidoDTO } from './item_pedido.dto';
-import { StatusPedido } from 'src/domain/pedido/enums/pedido.enum';
+import {
+  StatusPagamento,
+  StatusPedido,
+} from 'src/domain/pedido/enums/pedido.enum';
 import { Type } from 'class-transformer';
 
 export class CriaPedidoDTO {
@@ -38,17 +40,23 @@ export class CriaPedidoDTO {
 }
 
 export class AtualizaPedidoDTO {
+  @IsOptional()
   @IsString()
   @IsEnum(StatusPedido)
   @IsDefined({ each: true, message: 'O status do pedido não pode ser nulo' })
   @ApiProperty({ description: 'Status do pedido' })
-  statusPedido: StatusPedido;
+  statusPedido?: StatusPedido;
 
   @IsOptional()
-  @IsBoolean()
+  @IsEnum(StatusPagamento)
   @IsDefined({ each: true, message: 'O status do pagamento não pode ser nulo' })
   @ApiProperty({ description: 'Status do pagamento', required: false })
-  pago?: boolean;
+  statusPagamento?: StatusPagamento;
+
+  @IsOptional()
+  @IsDefined({ each: true, message: 'O QR Code não pode ser nulo' })
+  @ApiProperty({ description: 'QR Code para pagamento no formato EMVCo' })
+  qrCode?: string = null;
 }
 
 export class PedidoDTO {

@@ -1,10 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
 import {
-  MensagemMercadoPagoDTO,
+  NotificacaoMercadoPagoDTO,
   PedidoGatewayPagamentoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
 
@@ -16,44 +16,34 @@ export class WebhookUseCase implements IWebhookUseCase {
     private readonly pedidoRepository: IPedidoRepository,
     @Inject(IGatewayPagamentoService)
     private readonly gatewayPagamentoService: IGatewayPagamentoService,
-    @Inject(IApiPedidosService)
-    private readonly apiPedidosService: IApiPedidosService,
+    @Inject(IFilaPagamentoConfirmadoAdapter)
+    private readonly filaPagamentoConfirmadoAdapter: IFilaPagamentoConfirmadoAdapter,
   ) {}
 
   async consumirMensagem(
     id: string,
     topic: string,
-    mensagem: MensagemMercadoPagoDTO,
+    notificacao: NotificacaoMercadoPagoDTO,
   ): Promise<any> {
-    this.logger.debug(
-      `Processando request do Mercado Pago...`,
-      id,
-      topic,
-      mensagem,
-    );
+    this.logger.debug(`Processando request do Mercado Pago...`);
     await this.pedidoRepository.guardarMsgWebhook(
       id,
       topic,
-      JSON.stringify(mensagem),
+      JSON.stringify(notificacao),
     );
 
     if (id && topic === 'merchant_order') {
       const pedidoGatewayPag =
         await this.gatewayPagamentoService.consultarPedido(id);
       const idInternoPedido = pedidoGatewayPag.external_reference;
-
       if (this.verificarPagamento(pedidoGatewayPag)) {
-        this.logger.log(
-          `O pedido ${idInternoPedido} foi pago`,
-          pedidoGatewayPag,
+        this.logger.log(`O pedido ${idInternoPedido} foi pago`);
+        this.filaPagamentoConfirmadoAdapter.publicarPagamentoConfirmado(
+          idInternoPedido,
         );
-
-        // TODO: Abaixo, ao invés de chamar a API de Pedidos, publicar msg na fila pagamento-confirmado ( ̶p̶a̶g̶a̶m̶e̶n̶t̶o̶-̶r̶e̶a̶l̶i̶z̶a̶d̶o̶)
-        this.apiPedidosService.atualizarStatusPedido(idInternoPedido);
       } else {
-        // TODO: Publicar msg na fila falha-pagamento
+        // TODO: Publicar msg na fila falha-pagamento?
       }
-
       this.logger.debug(`A request do Mercado Pago foi processada com sucesso`);
       return {
         mensagem: 'Request processada com sucesso',

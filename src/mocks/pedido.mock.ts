@@ -13,7 +13,7 @@ import {
   PedidoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/pedido.dto';
 import {
-  MensagemMercadoPagoDTO,
+  NotificacaoMercadoPagoDTO,
   PaymentDTO,
   PedidoGatewayPagamentoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
@@ -140,7 +140,7 @@ export const mercadoPagoResponseMock = {
   in_store_order_id: 'd4e8ca59-3e1d-4c03-b1f6-580e87c654ae',
 };
 
-export const mensagemGatewayPagamentoDTO = new MensagemMercadoPagoDTO();
+export const mensagemGatewayPagamentoDTO = new NotificacaoMercadoPagoDTO();
 mensagemGatewayPagamentoDTO.resource =
   'https://api.mercadolibre.com/merchant_orders/15171882961';
 mensagemGatewayPagamentoDTO.topic = 'merchant_order';
@@ -179,8 +179,8 @@ export const gatewayPagamentoServiceMock = {
 };
 
 // Mock jest das funções do service da api de pedidos
-export const apiPedidosServiceMock = {
-  atualizarStatusPedido: jest.fn(),
+export const filaPagamentoConfirmadoAdapter = {
+  publicarPagamentoConfirmado: jest.fn(),
 };
 
 // Mock jest das funções da factory que cria entidade pedido

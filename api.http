@@ -3,32 +3,6 @@ GET http://localhost:3003/health
 
 ##################################################
 
-### Criar pedido
-POST http://localhost:3003/pedido
-Content-Type: application/json
-
-{
-    "id": "8a08e625-6747-475d-a1f3-ea059ead745d",
-    "numeroPedido": "638692",
-    "itensPedido": [
-        {
-            "quantidade": 1,
-            "produto": {
-                "id": "ceb54f86-1f86-4138-a47a-03d8dc9fcdca",
-                "nome": "X-tudo",
-                "descricao": "Ingredientes: 1 Hambúrguer, 50 G De Bacon Picados, 1 Ovo, 2 Fatias De Presunto, 2 Fatias De Mussarela (cheddar), 1 Folha De Alface, 1 Rodela De Tomate, 1 Pão De Hambúrguer, 1 Colher De Maionese, Catchup A Gosto (opcional)",
-                "valorUnitario": 29.9,
-                "categoria": {
-                    "id": "46891fe2-3a09-4cd1-8864-dfb99c2aa79a",
-                    "nome": "Lanches",
-                    "descricao": "Lanches Para Todos Os Gostos!"
-                }
-            }
-        }
-    ]
-}
-
-
 ### Webhook
 POST http://localhost:3003/webhook?id=15140831325&topic=merchant_order
 Content-Type: application/json

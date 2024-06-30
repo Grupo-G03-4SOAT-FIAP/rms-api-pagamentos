@@ -4,7 +4,7 @@ import { IPedidoFactory } from 'src/domain/pedido/interfaces/pedido.factory.port
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoDTOFactory } from 'src/domain/pedido/interfaces/pedido.dto.factory.port';
 import {
-  apiPedidosServiceMock,
+  filaPagamentoConfirmadoAdapter,
   gatewayPagamentoServiceMock,
   pedidoDTOFactoryMock,
   pedidoDTOMock,
@@ -16,7 +16,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { WebhookUseCase } from './webhook.use_case';
 import { Logger } from '@nestjs/common';
-import { IApiPedidosService } from 'src/domain/pedido/interfaces/apipedido.service.port';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
 
 describe('WebhookUseCase', () => {
   let webhookUseCase: WebhookUseCase;
@@ -41,8 +41,8 @@ describe('WebhookUseCase', () => {
           useValue: gatewayPagamentoServiceMock,
         },
         {
-          provide: IApiPedidosService,
-          useValue: apiPedidosServiceMock,
+          provide: IFilaPagamentoConfirmadoAdapter,
+          useValue: filaPagamentoConfirmadoAdapter,
         },
         {
           provide: IPedidoDTOFactory,
@@ -76,9 +76,9 @@ describe('WebhookUseCase', () => {
       null,
     );
 
-    expect(apiPedidosServiceMock.atualizarStatusPedido).toHaveBeenCalledWith(
-      pedidoId,
-    );
+    expect(
+      filaPagamentoConfirmadoAdapter.publicarPagamentoConfirmado,
+    ).toHaveBeenCalledWith(pedidoId);
     expect(result).toStrictEqual({
       mensagem: 'Request processada com sucesso',
     });

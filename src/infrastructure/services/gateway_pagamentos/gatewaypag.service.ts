@@ -133,31 +133,23 @@ export class GatewayMercadoPagoService implements IGatewayPagamentoService {
       `Consultando pedido ${idPedido} no Mercado Pago`,
       idPedido,
     );
-
     // Consulta o pedido usando a SDK do Mercado Pago
     const client = new MercadoPagoConfig({
       accessToken: this._accessToken,
       options: { timeout: 5000, idempotencyKey: this._idempotencyKey },
     });
-
     const customerClient = new MerchantOrder(client);
-
     const merchantOrderId = idPedido;
-
     try {
       const merchantOrderResponse = await customerClient.get({
         merchantOrderId: merchantOrderId,
       });
-
       const pedidoGatewayPag =
         merchantOrderResponse as unknown as PedidoGatewayPagamentoDTO;
-
       this.logger.debug(
-        `Pedido ${idPedido} consultado com sucesso no Mercado Pago`,
-        idPedido,
-        pedidoGatewayPag,
+        `Merchant order id ${merchantOrderId} consultado com sucesso no Mercado Pago`,
+        JSON.stringify(pedidoGatewayPag),
       );
-
       return pedidoGatewayPag;
     } catch (error) {
       this.logger.error(
