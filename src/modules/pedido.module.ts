@@ -10,7 +10,7 @@ import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedi
 import { PedidoController } from '../presentation/rest/v1/controllers/pedido/pedido.controller';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
 import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
-import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado.adapter';
 import { FilaPagamentoConfirmadoAdapter } from 'src/infrastructure/adapters/filas/pagamento_confirmado/pag_confirmado.adapter';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
 import { IProdutoDTOFactory } from 'src/domain/produto/interfaces/produto.dto.factory.port';
@@ -73,19 +73,11 @@ import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_co
               }),
             },
             {
-              name: configService.get<string>(
-                'NOME_FILA_FALHA_COBRANCA',
-              ),
-              queueUrl: configService.get<string>(
-                'URL_FILA_FALHA_COBRANCA',
-              ),
-              region: configService.get<string>(
-                'REGION_FILA_FALHA_COBRANCA',
-              ),
+              name: configService.get<string>('NOME_FILA_FALHA_COBRANCA'),
+              queueUrl: configService.get<string>('URL_FILA_FALHA_COBRANCA'),
+              region: configService.get<string>('REGION_FILA_FALHA_COBRANCA'),
               sqs: new SQSClient({
-                region: configService.get<string>(
-                  'REGION_FILA_FALHA_COBRANCA',
-                ),
+                region: configService.get<string>('REGION_FILA_FALHA_COBRANCA'),
                 endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
               }),
             },
@@ -102,6 +94,23 @@ import { IFilaFalhaCobrancaAdapter } from 'src/domain/pedido/interfaces/falha_co
               sqs: new SQSClient({
                 region: configService.getOrThrow<string>(
                   'REGION_FILA_PAGAMENTO_CONFIRMADO',
+                ),
+                endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
+              }),
+            },
+            {
+              name: configService.getOrThrow<string>(
+                'NOME_FILA_FALHA_PAGAMENTO',
+              ),
+              queueUrl: configService.getOrThrow<string>(
+                'URL_FILA_FALHA_PAGAMENTO',
+              ),
+              region: configService.getOrThrow<string>(
+                'REGION_FILA_FALHA_PAGAMENTO',
+              ),
+              sqs: new SQSClient({
+                region: configService.getOrThrow<string>(
+                  'REGION_FILA_FALHA_PAGAMENTO',
                 ),
                 endpoint: configService.get<string>('LOCALSTACK_ENDPOINT'),
               }),

@@ -7,7 +7,7 @@ import { IPedidoRepository } from '../domain/pedido/interfaces/pedido.repository
 import { PedidoRepository } from '../infrastructure/sql/repositories/pedido/pedido.repository';
 import { IGatewayPagamentoService } from '../domain/pedido/interfaces/gatewaypag.service.port';
 import { GatewayMercadoPagoService } from '../infrastructure/services/gateway_pagamentos/gatewaypag.service';
-import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado.adapter';
 import { FilaPagamentoConfirmadoAdapter } from 'src/infrastructure/adapters/filas/pagamento_confirmado/pag_confirmado.adapter';
 import { WebhookController } from 'src/presentation/rest/v1/controllers/webhook/webhook.controller';
 import { ProdutoDTOFactory } from 'src/domain/produto/factories/produto.dto.factory';
@@ -21,6 +21,8 @@ import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.p
 import { ICategoriaFactory } from 'src/domain/categoria/interfaces/categoria.factory.port';
 import { CategoriaFactory } from 'src/domain/categoria/factories/categoria.factory';
 import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-services.module';
+import { IFilaFalhaPagamentoAdapter } from 'src/domain/pedido/interfaces/falha_pag.adapter';
+import { FilaFalhaPagamentoAdapter } from 'src/infrastructure/adapters/filas/falha_pagamento/falha_pag.adapter';
 
 @Module({
   controllers: [WebhookController],
@@ -76,6 +78,10 @@ import { MongoDataServicesModule } from 'src/infrastructure/mongo/mongo-data-ser
     {
       provide: ICategoriaDTOFactory,
       useClass: CategoriaDTOFactory,
+    },
+    {
+      provide: IFilaFalhaPagamentoAdapter,
+      useClass: FilaFalhaPagamentoAdapter,
     },
   ],
   exports: [],

@@ -1,28 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SqsService } from '@ssut/nestjs-sqs';
-import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado.adapter';
+import { IFilaFalhaPagamentoAdapter } from 'src/domain/pedido/interfaces/falha_pag.adapter';
 
 @Injectable()
-export class FilaPagamentoConfirmadoAdapter
-  implements IFilaPagamentoConfirmadoAdapter
-{
+export class FilaFalhaPagamentoAdapter implements IFilaFalhaPagamentoAdapter {
   constructor(
     private readonly logger: Logger,
     private readonly configService: ConfigService,
     private readonly sqsService: SqsService,
   ) {}
-  async publicarPagamentoConfirmado(idPedido: string) {
+  async publicarFalhaPagamento(idPedido: string) {
     const queueName = this.configService.getOrThrow<string>(
-      'NOME_FILA_PAGAMENTO_CONFIRMADO',
+      'NOME_FILA_FALHA_PAGAMENTO',
     );
     try {
       await this.sqsService.send(queueName, {
         id: 'id',
         body: idPedido,
       });
-      this.logger.log(
-        `Confirmação de pagamento do pedido ${idPedido} publicada na fila ${queueName}`,
+      this.logger.warn(
+        `Falha de pagamento no pedido ${idPedido} publicada na fila ${queueName}`,
       );
     } catch (error) {
       this.logger.error(

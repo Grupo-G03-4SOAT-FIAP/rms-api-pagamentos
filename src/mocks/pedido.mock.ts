@@ -145,6 +145,7 @@ mensagemGatewayPagamentoDTO.resource =
   'https://api.mercadolibre.com/merchant_orders/15171882961';
 mensagemGatewayPagamentoDTO.topic = 'merchant_order';
 
+// Mock jest de um merchant order pago do Mercado Pago
 export const pedidoGatewayPagamentoDTO = new PedidoGatewayPagamentoDTO();
 pedidoGatewayPagamentoDTO.id = 15171882961;
 pedidoGatewayPagamentoDTO.status = 'closed';
@@ -154,6 +155,15 @@ const itemDTO = new PaymentDTO();
 itemDTO.status = 'approved';
 pedidoGatewayPagamentoDTO.payments = [itemDTO];
 pedidoGatewayPagamentoDTO.order_status = 'paid';
+
+// Mock jest de um merchant order expirado e cancelado do Mercado Pago
+export const pedidoCanceladoGatewayPagamentoDTO = new PedidoGatewayPagamentoDTO();
+pedidoCanceladoGatewayPagamentoDTO.id = pedidoGatewayPagamentoDTO.id;
+pedidoCanceladoGatewayPagamentoDTO.status = 'expired';
+pedidoCanceladoGatewayPagamentoDTO.external_reference =
+  '0a14aa4e-75e7-405f-8301-81f60646c93d';
+pedidoCanceladoGatewayPagamentoDTO.payments = [itemDTO];
+pedidoCanceladoGatewayPagamentoDTO.order_status = 'expired';
 
 // Mock jest das funções do repository pedido
 export const pedidoRepositoryMock = {
@@ -178,9 +188,14 @@ export const gatewayPagamentoServiceMock = {
   consultarPedido: jest.fn(),
 };
 
-// Mock jest das funções do service da api de pedidos
-export const filaPagamentoConfirmadoAdapter = {
+// Mock jest das funções do adapter da fila de pagamento confirmado
+export const filaPagamentoConfirmadoAdapterMock = {
   publicarPagamentoConfirmado: jest.fn(),
+};
+
+// Mock jest das funções do adapter da fila de falha no pagamento
+export const filaFalhaPagamentoAdapterMock = {
+  publicarFalhaPagamento: jest.fn(),
 };
 
 // Mock jest das funções da factory que cria entidade pedido
