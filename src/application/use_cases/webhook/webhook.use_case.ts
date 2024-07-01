@@ -49,6 +49,7 @@ export class WebhookUseCase implements IWebhookUseCase {
         pedidoGatewayPag.order_status == 'expired' ||
         pedidoGatewayPag.cancelled
       ) {
+        this.logger.warn(`O pedido ${idInternoPedido} está expirado ou cancelado no Mercado Pago`);
         this.filaFalhaPagamentoAdapter.publicarFalhaPagamento(idInternoPedido);
       }
       this.logger.debug(`A request do Mercado Pago foi processada com sucesso`);
