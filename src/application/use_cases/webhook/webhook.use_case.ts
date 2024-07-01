@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado_adapter';
+import { IFilaPagamentoConfirmadoAdapter } from 'src/domain/pedido/interfaces/pag_confirmado.adapter';
 import { IGatewayPagamentoService } from 'src/domain/pedido/interfaces/gatewaypag.service.port';
 import { IPedidoRepository } from 'src/domain/pedido/interfaces/pedido.repository.port';
 import { IWebhookUseCase } from 'src/domain/pedido/interfaces/webhook.use_case.port';
@@ -7,6 +7,7 @@ import {
   NotificacaoMercadoPagoDTO,
   PedidoGatewayPagamentoDTO,
 } from 'src/presentation/rest/v1/presenters/pedido/gatewaypag.dto';
+import { IFilaFalhaPagamentoAdapter } from 'src/domain/pedido/interfaces/falha_pag.adapter';
 
 @Injectable()
 export class WebhookUseCase implements IWebhookUseCase {
@@ -18,6 +19,8 @@ export class WebhookUseCase implements IWebhookUseCase {
     private readonly gatewayPagamentoService: IGatewayPagamentoService,
     @Inject(IFilaPagamentoConfirmadoAdapter)
     private readonly filaPagamentoConfirmadoAdapter: IFilaPagamentoConfirmadoAdapter,
+    @Inject(IFilaFalhaPagamentoAdapter)
+    private readonly filaFalhaPagamentoAdapter: IFilaFalhaPagamentoAdapter,
   ) {}
 
   async consumirMensagem(
@@ -41,8 +44,13 @@ export class WebhookUseCase implements IWebhookUseCase {
         this.filaPagamentoConfirmadoAdapter.publicarPagamentoConfirmado(
           idInternoPedido,
         );
-      } else {
-        // TODO: Publicar msg na fila falha-pagamento?
+      } else if (
+        pedidoGatewayPag.status == 'expired' ||
+        pedidoGatewayPag.order_status == 'expired' ||
+        pedidoGatewayPag.cancelled
+      ) {
+        this.logger.warn(`O pedido ${idInternoPedido} está expirado ou cancelado no Mercado Pago`);
+        this.filaFalhaPagamentoAdapter.publicarFalhaPagamento(idInternoPedido);
       }
       this.logger.debug(`A request do Mercado Pago foi processada com sucesso`);
       return {
