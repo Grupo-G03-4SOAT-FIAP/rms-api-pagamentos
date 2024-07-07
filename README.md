@@ -25,14 +25,17 @@ Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvo
 
 ## Executar a aplicação
 
+> [!IMPORTANT]  
+> Antes de executar o microsserviço de pagamentos, execute primeiro o microsserviço de pedidos, seguindo as instruções disponíveis no README da api de pedidos [aqui](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pedidos/tree/feature/147/docs?tab=readme-ov-file#executar-a-aplica%C3%A7%C3%A3o).
+
 1. Baixe e instale o Node.js em https://nodejs.org/en/download
 2. Instale o CLI do NestJS através do comando `npm i -g @nestjs/cli`
 3. Navegue até a pasta raiz do projeto usando o Terminal;
 4. Faça uma cópia do arquivo `.env.template` com o nome `.env` e preencha as variáveis de ambiente dentro dele;
 5. Execute o comando `npm install` para instalar os pacotes npm;
-6. Use o comando `npm run start` para iniciar a aplicação.
-7. Execute o comando `docker-compose up -d db-pagamentos` para iniciar o container do banco de dados;
-8. Acesse o Swagger em http://localhost:3000/swagger/
+6. Execute o comando `docker-compose up -d db-pagamentos` para iniciar o container do banco de dados;
+7. Use o comando `npm run start` para iniciar a aplicação.
+8. Acesse o Swagger em http://localhost:3003/swagger/
 
 <details>
 
@@ -43,8 +46,8 @@ Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvo
 1. Clone este repositório;
 2. Navegue até a pasta raiz do projeto usando o Terminal;
 3. Faça uma cópia do arquivo `.env.template` com o nome `.env` e preencha as variáveis de ambiente dentro dele;
-4. Execute o comando `docker-compose up -d`
-5. Acesse o Swagger em http://localhost:3000/swagger/
+4. Execute o comando `docker-compose up -d --build --force-recreate`
+5. Acesse o Swagger em http://localhost:3003/swagger/
 
 </details>
 
@@ -58,14 +61,14 @@ Microsserviço de Pagamentos do Sistema de Gestão de Restaurantes (RMS) desenvo
 2. Navegue até a pasta raiz do projeto usando o Terminal;
 3. Use o comando `docker build -t rms-api-pagamentos:latest .` para gerar a imagem de container da aplicação;
 4. Use o comando `kubectl apply -f k8s/development/postgres/namespace.yaml -f k8s/development/postgres/pvc-pv.yaml -f k8s/development/postgres/config.yaml -f k8s/development/postgres/secrets.yaml -f k8s/development/postgres/deployment.yaml -f k8s/development/postgres/service.yaml` para fazer deploy do banco de dados;
-5. Use o comando `kubectl apply -f k8s/development/bff/namespace.yaml -f k8s/development/bff/config.yaml -f k8s/development/bff/secrets.yaml -f k8s/development/bff/deployment.yaml -f k8s/development/bff/service.yaml -f k8s/development/bff/hpa.yaml` para fazer deploy da aplicação;
-6. Acesse o Swagger em http://localhost:3000/swagger/
+5. Use o comando `kubectl apply -f k8s/development/api/namespace.yaml -f k8s/development/api/config.yaml -f k8s/development/api/secrets.yaml -f k8s/development/api/deployment.yaml -f k8s/development/api/service.yaml -f k8s/development/api/hpa.yaml` para fazer deploy da aplicação;
+6. Acesse o Swagger em http://localhost:3003/swagger/
 
 > Para remover a aplicação do Kubernetes, use o comando `kubectl delete namespace rms`
 
 #### Sobre os Secrets do Kubernetes
 
-Em seu ambiente de desenvolvimento, por questão de segurança, abra os arquivos `/k8s/development/postgres/secrets.yaml` e `/k8s/development/bff/secrets.yaml` na pasta `/k8s/development` e preencha os valores sensíveis manualmente.
+Em seu ambiente de desenvolvimento, por questão de segurança, abra os arquivos `/k8s/development/postgres/secrets.yaml` e `/k8s/development/api/secrets.yaml` na pasta `/k8s/development` e preencha os valores sensíveis manualmente.
 
 > No ambiente de produção os Secrets do Kubernetes são gerenciados pelo AWS Secrets Manager.
 
@@ -86,6 +89,9 @@ Para testar o pagamento de pedidos usando o QR Code do Mercado Pago você vai pr
 7. Usando o [Postman](https://www.postman.com/), cadastre um **Caixa** conforme instruções na página [Criar caixa](https://www.mercadopago.com.br/developers/pt/reference/pos/_pos/post). Anote o `external_id` do Caixa que você cadastrou;
 8. Preencha as variáveis de ambiente no arquivo `.env` com o `User ID` e `Access Token` da aplicação de testes e com o `id` da Loja e o `external_id` do Caixa que você de cadastrou anteriormente através da API do Mercado Pago;
 9. Execute a aplicação.
+
+> [!TIP]
+> Para instruções mais detalhadas visite https://github.com/dannevesdantas/poc-mercadopago
 
 ## Banco de Dados
 
