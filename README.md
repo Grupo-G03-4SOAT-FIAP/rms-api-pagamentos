@@ -1,7 +1,7 @@
 <img src="https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pagamentos/raw/main/docs/img/bope-faca-na-carveira-knife-skull-logo.png" alt="BOPE" title="BOPE" align="right" height="60" />
 
 # Restaurant Management System
-## API de Pagamentos
+## Microsserviço de Pagamentos
 
 [![Deploy to Amazon EKS](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pagamentos/actions/workflows/deploy.yml/badge.svg)](https://github.com/Grupo-G03-4SOAT-FIAP/rms-api-pagamentos/actions/workflows/deploy.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Grupo-G03-4SOAT-FIAP_rms-api-pagamentos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Grupo-G03-4SOAT-FIAP_rms-api-pagamentos)
@@ -95,13 +95,15 @@ Para testar o pagamento de pedidos usando o QR Code do Mercado Pago você vai pr
 
 ## Banco de Dados
 
-Você pode conectar-se a instância de banco de dados MongoDB usando o [MongoDB Compass](https://www.mongodb.com/products/tools/compass), o terminal através do [MongoDB Shell](https://www.mongodb.com/docs/v4.4/mongo/#download-the-mongo-shell), ou qualquer outra IDE ou ferramenta compatível.
+Entendemos que o modelo de documento é o que mais se adequa ao nosso problema de negócio, contexto atual e requisitos no Microsserviço de Pagamentos.
 
 <details>
 
 <summary>Quais são os parâmetros da conexão e credenciais para acesso ao banco de dados MongoDB?</summary>
 
 <br>
+
+Você pode conectar-se a instância de banco de dados MongoDB usando o [MongoDB Compass](https://www.mongodb.com/products/tools/compass), o terminal através do [MongoDB Shell](https://www.mongodb.com/docs/v4.4/mongo/#download-the-mongo-shell), ou qualquer outra IDE ou ferramenta compatível.
 
 > Host: localhost\
 > Porta: 27017 (padrão)\
